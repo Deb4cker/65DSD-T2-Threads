@@ -1,0 +1,24 @@
+
+¡	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(„¹™üÿÿÿÿ8¾ş€ì1J$ba0e5174-60ea-43cc-ae62-9d5b3b584b0f
+É
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¼¸Ò±ùÿÿÿÿ8ìĞƒì1J$7e8473e6-c997-413c-a5ef-8d4b8566c4b4
+É
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¾…øÿÿÿÿ8Ğş€ì1J$5f15bd81-cd90-439f-9a25-14cb0f1725c8
+Ã
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(úÆd8Ñş€ì1J$77c9501f-d924-4ce3-80dc-25f4ffb4af25
+É
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¼õ¡´úÿÿÿÿ8Òş€ì1J$f2770d63-49c4-4c23-9973-e850cccb62f5
+É
+java:S1186""€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(îÏ§Ãûÿÿÿÿ8Ôş€ì1J$7d638016-2473-45c6-b355-e9d5fbe23d6f
+Ã
+java:S1186&"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ã½±8Ôş€ì1J$666d20a7-5b34-491e-a653-2f48c403ceca
+É
+java:S1186*"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(«‹ èøÿÿÿÿ8Ôş€ì1J$98c517e4-6aa6-4176-939c-df484794ef9c
+É
+java:S1186."€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ëõÊ¼üÿÿÿÿ8Ôş€ì1J$354631fe-1040-4efb-96bc-f413f1777742
+É
+java:S11862"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(§ö…¦úÿÿÿÿ8Õş€ì1J$90f01e4a-79dc-4dd9-9052-bb6bef82f44c
+ˆ
+java:S2134"@Don't extend "Thread", since the "run" method is not overridden.(Æê•şÿÿÿÿ8éõ»œì1J$e719456b-4906-4088-ae46-fbe93e3cc723
+u
+java:S1068"-Remove this unused "direction" private field.(¨šúıùÿÿÿÿ8õş€ì1J$e6463d80-5ac7-4b96-b91d-524e213cf4f5

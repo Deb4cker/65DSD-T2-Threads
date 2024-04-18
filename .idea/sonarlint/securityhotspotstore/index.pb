@@ -1,5 +1,21 @@
 
-Q
-!src/main/java/udesc/tes/Main.java,e\8\e8fd585cabe5d909feefcc2cf89a60c3f004e4ac
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
+Q
+!src/main/java/udesc/dsd/Main.java,5\e\5e7bd4cb8ca790527aa55c1178eff9bd84c20744
+V
+&src/main/java/udesc/dsd/Model/Car.java,4\8\48976ec06bb19fc28fff5ae60999e05cccb8ae62
+^
+.src/main/java/udesc/dsd/Commons/Constants.java,3\5\35e83200ddf6899ab46922338e294a32fc35f1fb
+X
+(src/main/java/udesc/dsd/Model/Point.java,6\0\6076e15a5feaf0e9b2c1596c79ac13c695e55738
+`
+0src/main/java/udesc/dsd/utils/MatrixBuilder.java,e\7\e73316d3558b840de255fb07b86de81444e6635c
+W
+'src/main/java/udesc/dsd/Model/Cell.java,4\f\4fe378dfc364f1a50e3cb7d702ddffb0226c2416
+\
+,src/main/java/udesc/dsd/Model/Direction.java,d\d\ddbaf9163ebfb59e77a1e96f9b9a40b539788c99
+f
+6src/main/java/udesc/dsd/utils/DirectionDictionary.java,a\4\a443e8e24d8511c33d55b5c8e485399fdce0fd18
+[
++src/main/java/udesc/dsd/Commons/Colors.java,c\a\ca98397b8d7b9c6e30b22f1273d86a1fb0db9296
