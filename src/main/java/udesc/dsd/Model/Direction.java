@@ -2,8 +2,6 @@ package udesc.dsd.Model;
 
 import udesc.dsd.utils.DirectionDictionary;
 
-import static udesc.dsd.Commons.Constants.*;
-
 public class Direction {
     private final int to;
     private final String directionString;

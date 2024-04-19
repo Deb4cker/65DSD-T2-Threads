@@ -1,53 +1,93 @@
 package udesc.dsd.Model;
 
-import java.util.Random;
+import static udesc.dsd.Commons.Constants.*;
 
 public class Car extends Thread{
     private final long sleepTime;
+    private final Road road;
     private Direction direction;
+    private Cell nextCell;
+    private Cell cell;
 
-    public Car() {
-        Random r = new Random();
-        this.sleepTime = r.nextLong(100, 1000);
+    public Car(Road road, long sleepTime) {
+        this.road = road;
+        this.sleepTime = sleepTime;
     }
 
-    public long getSleepTime(){
-        return sleepTime;
+    public void setCell(Cell cell){
+        this.cell = cell;
+        this.direction = cell.getDirection();
+        cell.setCar(this);
     }
 
-    public void go() {
+    public void removeFromCell(){
+        cell.removeCar();
+        this.cell = null;
+    }
+
+    public void setNextCell(Cell nextCell){
+        this.nextCell = nextCell;
+    }
+
+    @Override
+    public void run() {
+        while(nextCell != null) go();
+        System.out.println( getName() + ": Stopping");
+        road.removeCar(this);
+    }
+
+    private void go(){
+        try {
+            if(nextCell.isFree()){
+                if(cell != null) cell.removeCar();
+                setCell(nextCell);
+                nextCell = findNextCell();
+                if(nextCell != null)
+                    System.out.println( getName() + ": I'm going to cell x" + nextCell.getRow() + ", y" + nextCell.getCol());
+                road.printMatrixInConsole();
+                Thread.sleep(sleepTime);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Cell findNextCell(){
+        try {
+            return switch (direction.to()) {
+                case UP -> cellAtUp();
+                case RIGHT -> cellAtRight();
+                case DOWN -> cellAtDown();
+                case LEFT -> cellAtLeft();
+                default -> null;
+            };
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    private Cell cellAtUp() throws ArrayIndexOutOfBoundsException{
+        int x = cell.getRow();
+        int y = cell.getCol();
+        return road.getCellByPosition(x - 1, y);
 
     }
 
-    public void goToUp() {
-
+    private Cell cellAtRight() throws ArrayIndexOutOfBoundsException{
+        int x = cell.getRow();
+        int y = cell.getCol();
+        return road.getCellByPosition(x, y + 1);
     }
 
-    public void goToRight() {
-
+    private Cell cellAtDown() throws ArrayIndexOutOfBoundsException{
+        int x = cell.getRow();
+        int y = cell.getCol();
+        return road.getCellByPosition(x + 1, y);
     }
 
-    public void goToDown() {
-
-    }
-
-    public void gotToLeft() {
-
-    }
-
-    public void goFromUpToRight() {
-
-    }
-
-    public void goFromUpToLeft() {
-
-    }
-
-    public void goFromRightToDown() {
-
-    }
-
-    public void goFromDownToLeft() {
-
+    private Cell cellAtLeft() throws ArrayIndexOutOfBoundsException{
+        int x = cell.getRow();
+        int y = cell.getCol();
+        return road.getCellByPosition(x, y - 1);
     }
 }

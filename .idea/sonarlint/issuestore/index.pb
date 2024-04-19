@@ -19,3 +19,11 @@ f
 6src/main/java/udesc/dsd/utils/DirectionDictionary.java,a\4\a443e8e24d8511c33d55b5c8e485399fdce0fd18
 [
 +src/main/java/udesc/dsd/Commons/Colors.java,c\a\ca98397b8d7b9c6e30b22f1273d86a1fb0db9296
+W
+'src/main/java/udesc/dsd/Model/Road.java,1\4\14846e72bc4557c57f7eddfd9de799ef22abde09
+]
+-src/main/java/udesc/dsd/Model/CarFactory.java,4\b\4b04979926036069b7a14f35ffe5cbd6622ba91c
+e
+5src/main/java/udesc/dsd/Singleton/MutexSingleton.java,3\7\371d8e963b4972a27c02e783330b7f1893f72bb2
+j
+:src/main/java/udesc/dsd/Model/EntranceMediatorRoutine.java,0\4\043e4a230d4df071e451dcc45c48227ef418bde1

@@ -18,4 +18,8 @@ public class Constants {
     public static final String ROAD_FILE_1 = "src/main/resources/roads1.txt";
     public static final String ROAD_FILE_2 = "src/main/resources/roads2.txt";
     public static final String ROAD_FILE_3 = "src/main/resources/roads3.txt";
+    public static final String ROAD_FILE_TEST1 = "src/main/resources/roadsTest1.txt";
+    public static final String ROAD_FILE_TEST2 = "src/main/resources/roadsTest2.txt";
+
+    private Constants(){}
 }
