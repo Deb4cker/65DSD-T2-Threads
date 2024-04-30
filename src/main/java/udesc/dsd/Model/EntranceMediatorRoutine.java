@@ -8,7 +8,7 @@ public class EntranceMediatorRoutine extends Thread{
 
     private final Road road;
     private boolean running = false;
-    private final List<Car> queue = Collections.synchronizedList(new ArrayList<>());
+    private final List<Car> queue = Collections.synchronizedList(new ArrayList<>()); //fila
 
     public EntranceMediatorRoutine(Road road) {
         this.road = road;

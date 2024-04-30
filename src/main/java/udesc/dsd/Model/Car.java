@@ -8,6 +8,7 @@ public class Car extends Thread{
     private Direction direction;
     private Cell nextCell;
     private Cell cell;
+    //vai ter que ter um icone
 
     public Car(Road road, long sleepTime) {
         this.road = road;
@@ -31,7 +32,9 @@ public class Car extends Thread{
 
     @Override
     public void run() {
-        while(nextCell != null) go();
+        while(nextCell != null){
+            go();
+        }
         System.out.println( getName() + ": Stopping");
         road.removeCar(this);
     }
@@ -42,11 +45,15 @@ public class Car extends Thread{
                 if(cell != null) cell.removeCar();
                 setCell(nextCell);
                 nextCell = findNextCell();
-                if(nextCell != null)
-                    System.out.println( getName() + ": I'm going to cell x" + nextCell.getRow() + ", y" + nextCell.getCol());
-                road.printMatrixInConsole();
+                if(nextCell != null) {
+                    System.out.println(getName() + ": I'm going to cell x" + nextCell.getRow() + ", y" + nextCell.getCol());
+                    clearConsole();
+                    road.printMatrixInConsole();
+                }
                 Thread.sleep(sleepTime);
             }
+
+            //não faz nada se nao ta livre
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -89,5 +96,10 @@ public class Car extends Thread{
         int x = cell.getRow();
         int y = cell.getCol();
         return road.getCellByPosition(x, y - 1);
+    }
+
+    private void clearConsole(){  
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();
     }
 }

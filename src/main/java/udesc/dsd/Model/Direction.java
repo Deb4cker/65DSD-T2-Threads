@@ -6,6 +6,7 @@ public class Direction {
     private final int to;
     private final String directionString;
     private final String directionSymbol;
+    //vai ter que ter um simbolo de direção
 
     public Direction(int direction) {
         this.to = direction;

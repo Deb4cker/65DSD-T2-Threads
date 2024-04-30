@@ -10,25 +10,16 @@ import static udesc.dsd.Commons.Constants.*;
 public class MatrixBuilder {
 
     private BufferedReader reader;
-    private File matrixFile;
+    private InputStream inputStream;
     private Cell[][] matrix;
 
-    public MatrixBuilder(String filename){
-        try{
-            matrixFile = new File(filename);
-            reader = new BufferedReader(new FileReader(matrixFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public MatrixBuilder(String filename) {
+        setFile(filename);
     }
 
     public void setFile(String filename) {
-        try{
-            matrixFile = new File(filename);
-            reader = new BufferedReader(new FileReader(matrixFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        inputStream = MatrixBuilder.class.getClassLoader().getResourceAsStream(filename);
+        if (inputStream != null) reader = new BufferedReader(new InputStreamReader(inputStream));
     }
 
     public Cell[][] buildMatrix(){
