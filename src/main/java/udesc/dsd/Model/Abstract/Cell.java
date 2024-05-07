@@ -1,14 +1,18 @@
-package udesc.dsd.Model;
+package udesc.dsd.Model.Abstract;
+
+import udesc.dsd.Model.Car;
+import udesc.dsd.Model.Direction;
+
+import java.util.Random;
 
 import static udesc.dsd.Commons.Colors.*;
 
-public class Cell {
-
+public abstract class Cell {
     private final int row;
     private final int col;
     private final Direction direction;
     private final boolean isEntrance;
-    private Car car;
+    protected Car car;
 
     public Cell(int row, int col, Direction direction, boolean isEntrance) {
         this.row = row;
@@ -25,13 +29,13 @@ public class Cell {
         return col;
     }
 
-    public synchronized void setCar(Car car) {
-        this.car = car;
-    }
+    public abstract void setCar(Car car) throws InterruptedException;
 
-    public synchronized void removeCar(){
-        this.car = null;
-    }
+    public abstract void removeCar();
+
+    public abstract void release();
+
+    public abstract void block() throws InterruptedException;
 
     public Direction getDirection() {
         return direction;
@@ -47,7 +51,7 @@ public class Cell {
 
     @Override
     public String toString(){
-        if(car!= null) return BLUE + direction.getDirectionSymbol();
+        if(car!= null) return car.getColor() + direction.getDirectionSymbol();
         return isEntrance? GREEN + direction.getDirectionSymbol() : WHITE + direction.getDirectionSymbol();
     }
 }

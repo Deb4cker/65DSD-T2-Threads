@@ -1,5 +1,7 @@
 package udesc.dsd.Model;
 
+import udesc.dsd.Model.Abstract.Cell;
+import udesc.dsd.Model.Abstract.CellFactory;
 import udesc.dsd.utils.MatrixBuilder;
 
 import java.util.ArrayList;
@@ -13,8 +15,8 @@ public class Road {
     private final List<Car> cars = new ArrayList<>();
     private final List<Cell> entrances = Collections.synchronizedList(new ArrayList<>());
 
-    public Road(String file) {
-        this.matrix = new MatrixBuilder(file).buildMatrix();
+    public Road(String file, CellFactory factory) {
+        this.matrix = new MatrixBuilder(file, factory).buildMatrix();
 
         for (Cell[] cells : matrix) {
             for(Cell cell : cells){

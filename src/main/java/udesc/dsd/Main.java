@@ -1,9 +1,14 @@
 package udesc.dsd;
 
+import udesc.dsd.Model.Abstract.Cell;
+import udesc.dsd.Model.Abstract.CellFactory;
+import udesc.dsd.Model.Abstract.MonitorsCellFactory;
+import udesc.dsd.Model.Abstract.SemaphoricCellFactory;
 import udesc.dsd.Model.Car;
 import udesc.dsd.Model.CarFactory;
 import udesc.dsd.Model.EntranceMediatorRoutine;
 import udesc.dsd.Model.Road;
+import udesc.dsd.View.MainView;
 
 import java.util.Scanner;
 
@@ -31,33 +36,41 @@ public class Main {
         System.out.print("\nRun routine [true], or print the matrix? [false]: ");
         boolean wantToRunRoutine = scanner.nextBoolean();
 
-        if (wantToRunRoutine) routineTest(fileNum, carNumber);
-        else matrixPrintTest(fileNum);
+        System.out.print("\nSemaphore [true], or Monitors? [false]: ");
+        boolean isSemaphoric = scanner.nextBoolean();
+        CellFactory factory = isSemaphoric? new SemaphoricCellFactory() : new MonitorsCellFactory();
+
+        if (wantToRunRoutine) routineTest(fileNum, carNumber, factory);
+        else matrixPrintTest(fileNum, factory);
 
         scanner.close();
+
+
     }
 
-    static void routineTest(int fileNum, int carNumber) throws InterruptedException {
+    static void routineTest(int fileNum, int carNumber, CellFactory factory) throws InterruptedException {
         String file = switchRoadFile(fileNum);
-        Road road = new Road(file);
-        CarFactory factory = new CarFactory(road);
+        Road road = new Road(file, factory);
+        CarFactory carFactory = new CarFactory(road);
 
         road.printMatrixInConsole();
 
         EntranceMediatorRoutine routine = new EntranceMediatorRoutine(road);
 
         for(int i = 0; i < carNumber; i++){
-            Car car = factory.buildCar();
+            Car car = carFactory.buildCar();
             routine.addToQueue(car);
         }
+
+        new MainView(road).setVisible(true);
 
         routine.start();
         routine.join();
     }
 
-    static void matrixPrintTest(int fileNum){
+    static void matrixPrintTest(int fileNum, CellFactory factory){
         String file = switchRoadFile(fileNum);
-        Road road = new Road(file);
+        Road road = new Road(file, factory);
 
         road.printMatrixInConsole();
     }

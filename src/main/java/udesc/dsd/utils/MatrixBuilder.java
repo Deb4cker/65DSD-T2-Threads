@@ -1,6 +1,8 @@
 package udesc.dsd.utils;
 
-import udesc.dsd.Model.Cell;
+import udesc.dsd.Model.Abstract.Cell;
+import udesc.dsd.Model.Abstract.CellFactory;
+import udesc.dsd.Model.Abstract.SemaphoricCell;
 import udesc.dsd.Model.Direction;
 
 import java.io.*;
@@ -12,9 +14,12 @@ public class MatrixBuilder {
     private BufferedReader reader;
     private InputStream inputStream;
     private Cell[][] matrix;
+    private CellFactory factory;
 
-    public MatrixBuilder(String filename) {
+
+    public MatrixBuilder(String filename, CellFactory factory) {
         setFile(filename);
+        this.factory = factory;
     }
 
     public void setFile(String filename) {
@@ -55,7 +60,7 @@ public class MatrixBuilder {
                     Direction direction = new Direction(numValue);
                     boolean isEntrance = isEntrance(direction.to(), cellLine, columnCounter);
 
-                    Cell cell = new Cell(cellLine, columnCounter, direction, isEntrance);
+                    Cell cell = factory.createCell(cellLine, columnCounter, direction, isEntrance);
 
                     matrix[cell.getRow()][cell.getCol()] = cell;
                     columnCounter++;

@@ -1,5 +1,8 @@
 package udesc.dsd.Model;
 
+import udesc.dsd.Model.Abstract.Cell;
+
+import static udesc.dsd.Commons.Colors.*;
 import static udesc.dsd.Commons.Constants.*;
 
 public class Car extends Thread{
@@ -8,17 +11,22 @@ public class Car extends Thread{
     private Direction direction;
     private Cell nextCell;
     private Cell cell;
-    //vai ter que ter um icone
+    private final String consoleColor;
 
-    public Car(Road road, long sleepTime) {
+    public Car(Road road, long sleepTime, String consoleColor) {
         this.road = road;
         this.sleepTime = sleepTime;
+        this.consoleColor = consoleColor;
     }
 
     public void setCell(Cell cell){
         this.cell = cell;
         this.direction = cell.getDirection();
-        cell.setCar(this);
+        try {
+            cell.setCar(this);
+        } catch (InterruptedException e){
+            System.out.println("Ferrou :(");
+        }
     }
 
     public void removeFromCell(){
@@ -41,19 +49,20 @@ public class Car extends Thread{
 
     private void go(){
         try {
-            if(nextCell.isFree()){
-                if(cell != null) cell.removeCar();
-                setCell(nextCell);
-                nextCell = findNextCell();
-                if(nextCell != null) {
-                    System.out.println(getName() + ": I'm going to cell x" + nextCell.getRow() + ", y" + nextCell.getCol());
-                    clearConsole();
-                    road.printMatrixInConsole();
-                }
-                Thread.sleep(sleepTime);
+            Cell aux = cell;
+            setCell(nextCell);
+            if(aux != null) {
+                aux.removeCar();
             }
 
-            //não faz nada se nao ta livre
+            nextCell = findNextCell();
+            if(nextCell != null) {
+                System.out.println(getName() + ": I'm going to cell x" + nextCell.getRow() + ", y" + nextCell.getCol());
+                clearConsole();
+                road.printMatrixInConsole();
+            }
+            Thread.sleep(sleepTime);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -101,5 +110,9 @@ public class Car extends Thread{
     private void clearConsole(){  
         System.out.print("\033[H\033[2J");  
         System.out.flush();
+    }
+
+    public String getColor() {
+        return consoleColor;
     }
 }

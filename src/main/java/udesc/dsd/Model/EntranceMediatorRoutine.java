@@ -1,5 +1,7 @@
 package udesc.dsd.Model;
 
+import udesc.dsd.Model.Abstract.Cell;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
