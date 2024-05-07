@@ -1,6 +1,7 @@
 package udesc.dsd.Model.Abstract;
 
 import udesc.dsd.Model.Direction;
+import udesc.dsd.Model.SemaphoricCell;
 
 public class SemaphoricCellFactory extends CellFactory{
     @Override

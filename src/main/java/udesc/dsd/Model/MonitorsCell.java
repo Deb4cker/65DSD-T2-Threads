@@ -14,18 +14,6 @@ public class MonitorsCell extends Cell {
     }
 
     @Override
-    public void setCar(Car car) throws InterruptedException {
-        block();
-        this.car = car; //eu ocupei
-    }
-
-    @Override
-    public void removeCar() {
-        this.car = null; //desocupei
-        release();
-    }
-
-    @Override
     public void release() {
         lock.unlock();
     }

@@ -29,9 +29,16 @@ public abstract class Cell {
         return col;
     }
 
-    public abstract void setCar(Car car) throws InterruptedException;
+    public void setCar(Car car) throws InterruptedException {
+        block(); //entao espere
+        this.car = car; //eu ocupei
 
-    public abstract void removeCar();
+    }
+
+    public void removeCar() {
+        this.car = null; //desocupei
+        release(); //pode vir
+    }
 
     public abstract void release();
 

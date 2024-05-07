@@ -2,7 +2,6 @@ package udesc.dsd.utils;
 
 import udesc.dsd.Model.Abstract.Cell;
 import udesc.dsd.Model.Abstract.CellFactory;
-import udesc.dsd.Model.Abstract.SemaphoricCell;
 import udesc.dsd.Model.Direction;
 
 import java.io.*;
