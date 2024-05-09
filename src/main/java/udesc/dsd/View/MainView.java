@@ -4,17 +4,12 @@ import udesc.dsd.Model.Road;
 
 import javax.swing.*;
 
-public class MainView extends JPanel {
+public class MainView extends JFrame {
 
     private Road road;
 
-    public MainView(Road road){
-        this.road = road;
-
-        this.setBounds(100, 100, 1000, 1000);
-        this.setVisible(true);
+    public MainView(){
+        setSize(1600, 900);
+        setVisible(true);
     }
-
-
-
 }

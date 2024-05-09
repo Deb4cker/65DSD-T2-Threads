@@ -21,7 +21,7 @@ public class Constants {
     public static final String ROAD_FILE_TEST1 = "roadsTest1.txt";
     public static final String ROAD_FILE_TEST2 = "roadsTest2.txt";
     public static final String ASSETS_PATH = "src/main/resources/assets/";
-    public static final String CAMINHO_DO_ICONE_DE_CARRO = ASSETS_PATH + "nomeDoArquivo.png";
+    public static final String CAR_ICON_PATH = ASSETS_PATH + "nomeDoArquivo.png";
 
 
     private Constants(){}
