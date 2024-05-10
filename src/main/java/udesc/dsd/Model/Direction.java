@@ -3,7 +3,6 @@ package udesc.dsd.Model;
 import udesc.dsd.utils.DirectionDictionary;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Direction {
     private final int to;

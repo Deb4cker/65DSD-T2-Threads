@@ -9,10 +9,13 @@ import java.awt.*;
 public class MainView extends JFrame {
 
     private final Road road;
-    JPanel[][] viewMatrix;
+    private JLabel[][] viewMatrix;
 
     public MainView(Road road){
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
         setSize(1600, 900);
+        getContentPane().setBackground(Color.DARK_GRAY);
         this.road = road;
         loadMatrix();
         setVisible(true);
@@ -20,32 +23,31 @@ public class MainView extends JFrame {
 
     private void loadMatrix(){
         Cell[][] roadMatrix = road.getMatrix();
-        viewMatrix = new JPanel[roadMatrix.length][roadMatrix[0].length];
-
+        viewMatrix = new JLabel[roadMatrix.length][roadMatrix[0].length];
+        JPanel matrixPanel = new JPanel();
+        matrixPanel.setLayout(null);
         for(Cell[] columns : roadMatrix){
             for (Cell cell : columns){
 
                 int row = cell.getRow();
                 int column = cell.getCol();
                 Icon image = cell.getDirection().getImage();
-                PointInScreen point = new PointInScreen(row + 30, column + 30);
+                PointInScreen point = new PointInScreen(column * 30, row * 30);
 
-                JPanel draw = mountVisualCell(image, point);
+                JLabel draw = mountVisualCell(image, point);
                 viewMatrix[row][column] = draw;
-                add(draw);
+                matrixPanel.add(draw);
             }
         }
+        matrixPanel.setBounds(0, 0, viewMatrix[0].length * 30, viewMatrix.length * 30);
+        add(matrixPanel);
     }
 
-    private JPanel mountVisualCell(Icon icon, PointInScreen point){
-        JPanel cell = new JPanel();
+    private JLabel mountVisualCell(Icon icon, PointInScreen point){
         JLabel image = new JLabel();
         image.setIcon(icon);
-        cell.setSize(30, 30);
-        cell.setLayout(new BorderLayout());
-        cell.setBounds(point.x, point.y, 30, 30);
-        cell.add(image);
-        return cell;
+        image.setBounds(point.x, point.y, 30, 30);
+        return image;
     }
 
     private record PointInScreen(int x, int y){}
