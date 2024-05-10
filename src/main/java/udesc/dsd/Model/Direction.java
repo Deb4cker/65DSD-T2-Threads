@@ -2,16 +2,20 @@ package udesc.dsd.Model;
 
 import udesc.dsd.utils.DirectionDictionary;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Direction {
     private final int to;
     private final String directionString;
     private final String directionSymbol;
-    //vai ter que ter um simbolo de direção
+    private final Icon image;
 
     public Direction(int direction) {
         this.to = direction;
         directionString = DirectionDictionary.getString(direction);
         directionSymbol = DirectionDictionary.getSymbol(direction);
+        image = DirectionDictionary.getImage(direction);
     }
 
     public int to() {
@@ -28,5 +32,9 @@ public class Direction {
 
     public String getDirectionSymbol() {
         return directionSymbol;
+    }
+
+    public Icon getImage(){
+        return image;
     }
 }

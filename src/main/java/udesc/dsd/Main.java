@@ -16,35 +16,33 @@ import static udesc.dsd.Commons.Constants.*;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        new MainView();
+        Scanner scanner = new Scanner(System.in);
 
-//        Scanner scanner = new Scanner(System.in);
-//
-//        System.out.println("""
-//                What file do you want to read?"
-//                [1]: Model 1
-//                [2]: Model 2
-//                [3]: Model 3
-//                [4]: Straight Line Test
-//                [5]: Curve Behavior Test
-//                """);
-//
-//        int fileNum = scanner.nextInt();
-//
-//        System.out.print("\nHow many cars do you want to run? ");
-//        int carNumber = scanner.nextInt();
-//
-//        System.out.print("\nRun routine [true], or print the matrix? [false]: ");
-//        boolean wantToRunRoutine = scanner.nextBoolean();
-//
-//        System.out.print("\nSemaphore [true], or Monitors? [false]: ");
-//        boolean isSemaphoric = scanner.nextBoolean();
-//        CellFactory factory = isSemaphoric? new SemaphoricCellFactory() : new MonitorsCellFactory();
-//
-//        if (wantToRunRoutine) routineTest(fileNum, carNumber, factory);
-//        else matrixPrintTest(fileNum, factory);
-//
-//        scanner.close();
+        System.out.println("""
+                What file do you want to read?"
+                [1]: Model 1
+                [2]: Model 2
+                [3]: Model 3
+                [4]: Straight Line Test
+                [5]: Curve Behavior Test
+                """);
+
+        int fileNum = scanner.nextInt();
+
+        System.out.print("\nHow many cars do you want to run? ");
+        int carNumber = scanner.nextInt();
+
+        System.out.print("\nRun routine [true], or print the matrix? [false]: ");
+        boolean wantToRunRoutine = scanner.nextBoolean();
+
+        System.out.print("\nSemaphore [true], or Monitors? [false]: ");
+        boolean isSemaphoric = scanner.nextBoolean();
+        CellFactory factory = isSemaphoric? new SemaphoricCellFactory() : new MonitorsCellFactory();
+
+        if (wantToRunRoutine) routineTest(fileNum, carNumber, factory);
+        else matrixPrintTest(fileNum, factory);
+
+        scanner.close();
 
 
     }
@@ -63,7 +61,7 @@ public class Main {
             routine.addToQueue(car);
         }
 
-        //new MainView(road).setVisible(true);
+        new MainView(road);
 
         routine.start();
         routine.join();
@@ -74,6 +72,7 @@ public class Main {
         Road road = new Road(file, factory);
 
         road.printMatrixInConsole();
+        new MainView(road);
     }
 
     static String switchRoadFile(int num){

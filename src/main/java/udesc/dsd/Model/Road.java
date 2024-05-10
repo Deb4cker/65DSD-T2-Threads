@@ -58,4 +58,8 @@ public class Road {
     public Cell getCellByPosition(int x, int y) {
         return matrix[x][y];
     }
+
+    public Cell[][] getMatrix(){
+        return matrix;
+    }
 }
