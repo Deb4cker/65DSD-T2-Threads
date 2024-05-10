@@ -2,7 +2,8 @@ package udesc.dsd.Model;
 
 import udesc.dsd.Model.Abstract.Cell;
 
-import static udesc.dsd.Commons.Colors.*;
+import javax.swing.*;
+
 import static udesc.dsd.Commons.Constants.*;
 
 public class Car extends Thread{
@@ -11,12 +12,12 @@ public class Car extends Thread{
     private Direction direction;
     private Cell nextCell;
     private Cell cell;
-    private final String consoleColor;
+    private Icon carIcon;
 
-    public Car(Road road, long sleepTime, String consoleColor) {
+    public Car(Road road, long sleepTime, Icon carIcon) {
         this.road = road;
         this.sleepTime = sleepTime;
-        this.consoleColor = consoleColor;
+        this.carIcon = carIcon;
     }
 
     public void setCell(Cell cell){
@@ -51,16 +52,9 @@ public class Car extends Thread{
         try {
             Cell aux = cell;
             setCell(nextCell);
-            if(aux != null) {
-                aux.removeCar();
-            }
+            if(aux != null) {aux.removeCar();}
 
             nextCell = findNextCell();
-            if(nextCell != null) {
-                System.out.println(getName() + ": I'm going to cell x" + nextCell.getRow() + ", y" + nextCell.getCol());
-                clearConsole();
-                road.printMatrixInConsole();
-            }
             Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
@@ -112,7 +106,7 @@ public class Car extends Thread{
         System.out.flush();
     }
 
-    public String getColor() {
-        return consoleColor;
+    public Icon getCarIcon() {
+        return carIcon;
     }
 }

@@ -1,17 +1,19 @@
 package udesc.dsd.View;
 
 import udesc.dsd.Model.Abstract.Cell;
+import udesc.dsd.Model.Observer.IconUpdater;
 import udesc.dsd.Model.Road;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainView extends JFrame {
+public class MainView extends JFrame implements IconUpdater {
 
     private final Road road;
     private JLabel[][] viewMatrix;
 
     public MainView(Road road){
+        road.mapIconUpdater(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         setSize(1600, 900);
@@ -48,6 +50,12 @@ public class MainView extends JFrame {
         image.setIcon(icon);
         image.setBounds(point.x, point.y, 30, 30);
         return image;
+    }
+
+    @Override
+    public synchronized void update(Icon icon, int row, int col) {
+        JLabel label = viewMatrix[row][col];
+        label.setIcon(icon);
     }
 
     private record PointInScreen(int x, int y){}

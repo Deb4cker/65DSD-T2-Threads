@@ -2,10 +2,7 @@ package udesc.dsd.Model.Abstract;
 
 import udesc.dsd.Model.Car;
 import udesc.dsd.Model.Direction;
-
-import java.util.Random;
-
-import static udesc.dsd.Commons.Colors.*;
+import udesc.dsd.Model.Observer.IconUpdater;
 
 public abstract class Cell {
     private final int row;
@@ -13,6 +10,7 @@ public abstract class Cell {
     private final Direction direction;
     private final boolean isEntrance;
     protected Car car;
+    private IconUpdater ui;
 
     public Cell(int row, int col, Direction direction, boolean isEntrance) {
         this.row = row;
@@ -31,13 +29,18 @@ public abstract class Cell {
 
     public void setCar(Car car) throws InterruptedException {
         block(); //entao espere
-        this.car = car; //eu ocupei
-
+        this.car = car;//eu ocupei
+        ui.update(car.getCarIcon(), row, col);
     }
 
     public void removeCar() {
         this.car = null; //desocupei
+        ui.update(direction.getImage(), row, col);
         release(); //pode vir
+    }
+
+    public void setUi(IconUpdater ui){
+        this.ui = ui;
     }
 
     public abstract void release();
@@ -54,11 +57,5 @@ public abstract class Cell {
 
     public synchronized boolean isFree(){
         return car == null;
-    }
-
-    @Override
-    public String toString(){
-        if(car!= null) return car.getColor() + direction.getDirectionSymbol();
-        return isEntrance? GREEN + direction.getDirectionSymbol() : WHITE + direction.getDirectionSymbol();
     }
 }

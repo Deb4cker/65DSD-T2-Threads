@@ -36,8 +36,5 @@ public class Constants {
     public static final String LEFT_ROAD_ICON = ASSETS_PATH + "left" + JPG;
     public static final String CROSS_ROAD_ICON = ASSETS_PATH + "cross" + PNG;
 
-
-
-
     private Constants(){}
 }

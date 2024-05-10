@@ -2,10 +2,10 @@ package udesc.dsd.Model;
 
 import udesc.dsd.Model.Abstract.Cell;
 import udesc.dsd.Model.Abstract.CellFactory;
+import udesc.dsd.Model.Observer.IconUpdater;
 import udesc.dsd.utils.MatrixBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,13 +45,11 @@ public class Road {
         cars.remove(car);
     }
 
-    public synchronized void printMatrixInConsole() {
-        if(cars.isEmpty()) System.out.println("No cars to print");
-        else System.out.println("Cars: " + (cars.indexOf(cars.getLast()) + 1));
-
+    public void mapIconUpdater(IconUpdater ui){
         for (Cell[] cells : matrix) {
-            Arrays.stream(cells).forEach(System.out::print);
-            System.out.println();
+            for(Cell cell : cells){
+                cell.setUi(ui);
+            }
         }
     }
 

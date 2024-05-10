@@ -52,8 +52,6 @@ public class Main {
         Road road = new Road(file, factory);
         CarFactory carFactory = new CarFactory(road);
 
-        road.printMatrixInConsole();
-
         EntranceMediatorRoutine routine = new EntranceMediatorRoutine(road);
 
         for(int i = 0; i < carNumber; i++){
@@ -70,8 +68,6 @@ public class Main {
     static void matrixPrintTest(int fileNum, CellFactory factory){
         String file = switchRoadFile(fileNum);
         Road road = new Road(file, factory);
-
-        road.printMatrixInConsole();
         new MainView(road);
     }
 
