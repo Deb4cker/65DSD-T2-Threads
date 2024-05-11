@@ -7,7 +7,7 @@ import udesc.dsd.Model.MonitorsCell;
 
 public class MonitorsCellFactory extends CellFactory {
     @Override
-    public Cell createCell(int row, int col, Direction direction, boolean isEntrance) {
-        return new MonitorsCell(row, col, direction, isEntrance);
+    public Cell createCell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
+        return new MonitorsCell(row, col, direction, isEntrance, isCross);
     }
 }

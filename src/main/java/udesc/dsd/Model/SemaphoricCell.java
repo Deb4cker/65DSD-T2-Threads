@@ -8,8 +8,8 @@ public class SemaphoricCell extends Cell {
 
     private final Semaphore semaphore = new Semaphore(1);
 
-    public SemaphoricCell(int row, int col, Direction direction, boolean isEntrance) {
-        super(row, col, direction, isEntrance);
+    public SemaphoricCell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
+        super(row, col, direction, isEntrance, isCross);
     }
 
     @Override

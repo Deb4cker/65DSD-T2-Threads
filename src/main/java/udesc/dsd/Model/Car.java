@@ -4,6 +4,11 @@ import udesc.dsd.Model.Abstract.Cell;
 
 import javax.swing.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 import static udesc.dsd.Commons.Constants.*;
 
 public class Car extends Thread{
@@ -12,7 +17,7 @@ public class Car extends Thread{
     private Direction direction;
     private Cell nextCell;
     private Cell cell;
-    private Icon carIcon;
+    private final Icon carIcon;
 
     public Car(Road road, long sleepTime, Icon carIcon) {
         this.road = road;
@@ -22,6 +27,7 @@ public class Car extends Thread{
 
     public void setCell(Cell cell){
         this.cell = cell;
+        //se a celula nao for cruzamento
         this.direction = cell.getDirection();
         try {
             cell.setCar(this);
@@ -64,7 +70,9 @@ public class Car extends Thread{
 
     private Cell findNextCell(){
         try {
-            return switch (direction.to()) {
+            int direction = this.direction.to();
+            if(direction > 4) return getCrossCellPossibilities();
+            return switch (direction) {
                 case UP -> cellAtUp();
                 case RIGHT -> cellAtRight();
                 case DOWN -> cellAtDown();
@@ -76,11 +84,14 @@ public class Car extends Thread{
         }
     }
 
+    private Cell getCrossCellPossibilities() {
+        return null;
+    }
+
     private Cell cellAtUp() throws ArrayIndexOutOfBoundsException{
         int x = cell.getRow();
         int y = cell.getCol();
         return road.getCellByPosition(x - 1, y);
-
     }
 
     private Cell cellAtRight() throws ArrayIndexOutOfBoundsException{
@@ -99,11 +110,6 @@ public class Car extends Thread{
         int x = cell.getRow();
         int y = cell.getCol();
         return road.getCellByPosition(x, y - 1);
-    }
-
-    private void clearConsole(){  
-        System.out.print("\033[H\033[2J");  
-        System.out.flush();
     }
 
     public Icon getCarIcon() {

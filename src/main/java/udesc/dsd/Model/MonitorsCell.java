@@ -9,8 +9,8 @@ public class MonitorsCell extends Cell {
 
     private final Lock lock = new ReentrantLock();
 
-    public MonitorsCell(int row, int col, Direction direction, boolean isEntrance) {
-        super(row, col, direction, isEntrance);
+    public MonitorsCell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
+        super(row, col, direction, isEntrance, isCross);
     }
 
     @Override

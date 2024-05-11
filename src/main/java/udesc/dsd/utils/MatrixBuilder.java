@@ -11,10 +11,8 @@ import static udesc.dsd.Commons.Constants.*;
 public class MatrixBuilder {
 
     private BufferedReader reader;
-    private InputStream inputStream;
     private Cell[][] matrix;
-    private CellFactory factory;
-
+    private final CellFactory factory;
 
     public MatrixBuilder(String filename, CellFactory factory) {
         setFile(filename);
@@ -22,7 +20,7 @@ public class MatrixBuilder {
     }
 
     public void setFile(String filename) {
-        inputStream = MatrixBuilder.class.getClassLoader().getResourceAsStream(filename);
+        InputStream inputStream = MatrixBuilder.class.getClassLoader().getResourceAsStream(filename);
         if (inputStream != null) reader = new BufferedReader(new InputStreamReader(inputStream));
     }
 
@@ -58,8 +56,9 @@ public class MatrixBuilder {
                     int cellLine = lineCounter - 2;
                     Direction direction = new Direction(numValue);
                     boolean isEntrance = isEntrance(direction.to(), cellLine, columnCounter);
+                    boolean isCross = isCross(direction.to());
 
-                    Cell cell = factory.createCell(cellLine, columnCounter, direction, isEntrance);
+                    Cell cell = factory.createCell(cellLine, columnCounter, direction, isEntrance, isCross);
 
                     matrix[cell.getRow()][cell.getCol()] = cell;
                     columnCounter++;
@@ -87,5 +86,9 @@ public class MatrixBuilder {
         boolean isRightEntrance = direction == LEFT && col == cols - 1;
 
         return isTopEntrance || isBottomEntrance || isLeftEntrance || isRightEntrance;
+    }
+
+    private boolean isCross(int direction){
+        return direction > 4;
     }
 }

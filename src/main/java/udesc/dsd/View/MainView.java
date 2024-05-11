@@ -28,6 +28,7 @@ public class MainView extends JFrame implements IconUpdater {
         viewMatrix = new JLabel[roadMatrix.length][roadMatrix[0].length];
         JPanel matrixPanel = new JPanel();
         matrixPanel.setLayout(null);
+        matrixPanel.setBackground(Color.DARK_GRAY);
         for(Cell[] columns : roadMatrix){
             for (Cell cell : columns){
 

@@ -9,14 +9,16 @@ public abstract class Cell {
     private final int col;
     private final Direction direction;
     private final boolean isEntrance;
+    private final boolean isCross;
     protected Car car;
     private IconUpdater ui;
 
-    public Cell(int row, int col, Direction direction, boolean isEntrance) {
+    public Cell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
         this.row = row;
         this.col = col;
         this.direction = direction;
         this.isEntrance = isEntrance;
+        this.isCross = isCross;
     }
 
     public int getRow() {
@@ -58,4 +60,7 @@ public abstract class Cell {
     public synchronized boolean isFree(){
         return car == null;
     }
+
+
+
 }
