@@ -18,6 +18,7 @@ public class Car extends Thread{
     private Cell cell;
     private final Icon carIcon;
     private final Map<Integer, int[]> crossPossibilities = new HashMap<>();
+    private boolean isRunning;
 
     public Car(Road road, long sleepTime, Icon carIcon) {
         this.road = road;
@@ -32,12 +33,6 @@ public class Car extends Thread{
             if (!cell.isCross()){
                 this.direction = cell.getDirection();
                 cell.setCar(this);
-            }
-            else {
-                this.direction = choseDirection();
-                Cell nextCell= getCrossCellPossibilities();
-                assert nextCell != null;
-                setCell(nextCell);
             }
         } catch (InterruptedException e){
             System.out.println("Ferrou :(");
@@ -55,7 +50,8 @@ public class Car extends Thread{
 
     @Override
     public void run() {
-        while(nextCell != null){
+        isRunning = true;
+        while(isRunning){
             go();
         }
         System.out.println( getName() + ": Stopping");
@@ -66,11 +62,10 @@ public class Car extends Thread{
         try {
             goToCell(nextCell);
             Cell nextCell = findNextCell();
-
             if(nextCell != null){
                 if(nextCell.isCross()) crossRoutine();
                 setNextCell(findNextCell());
-            }
+            } else shutdown();
             Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
@@ -78,9 +73,13 @@ public class Car extends Thread{
         }
     }
 
-    private void crossRoutine() {
-        direction = choseDirection();
+    private void shutdown(){
+        isRunning = false;
+    }
 
+    private void crossRoutine() {
+
+        //TODO
         //Ideia:
         //caso a direção escolhida é up e ele esta em up, a sequencia seria:
         goToCell(cellAtUp());
@@ -93,13 +92,12 @@ public class Car extends Thread{
         goToCell(cellAtUp());
         goToCell(cellAtUp());
         goToCell(cellAtLeft());
-
     }
 
     private void goToCell(Cell cell){
         Cell aux = this.cell;
         setCell(cell);
-        if(aux != null) {aux.removeCar();}
+        if(aux != null) aux.removeCar();
     }
 
     private Cell findNextCell(){

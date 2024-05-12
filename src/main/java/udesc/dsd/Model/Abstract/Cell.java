@@ -62,7 +62,4 @@ public abstract class Cell {
     public synchronized boolean isFree(){
         return car == null;
     }
-
-
-
 }
