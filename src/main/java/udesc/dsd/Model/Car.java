@@ -4,7 +4,6 @@ import udesc.dsd.Model.Abstract.Cell;
 
 import javax.swing.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -18,19 +17,28 @@ public class Car extends Thread{
     private Cell nextCell;
     private Cell cell;
     private final Icon carIcon;
+    private final Map<Integer, int[]> crossPossibilities = new HashMap<>();
 
     public Car(Road road, long sleepTime, Icon carIcon) {
         this.road = road;
         this.sleepTime = sleepTime;
         this.carIcon = carIcon;
+        loadPossibilities();
     }
 
     public void setCell(Cell cell){
-        this.cell = cell;
-        //se a celula nao for cruzamento
-        this.direction = cell.getDirection();
         try {
-            cell.setCar(this);
+            this.cell = cell;
+            if (!cell.isCross()){
+                this.direction = cell.getDirection();
+                cell.setCar(this);
+            }
+            else {
+                this.direction = choseDirection();
+                Cell nextCell= getCrossCellPossibilities();
+                assert nextCell != null;
+                setCell(nextCell);
+            }
         } catch (InterruptedException e){
             System.out.println("Ferrou :(");
         }
@@ -56,11 +64,13 @@ public class Car extends Thread{
 
     private void go(){
         try {
-            Cell aux = cell;
-            setCell(nextCell);
-            if(aux != null) {aux.removeCar();}
+            goToCell(nextCell);
+            Cell nextCell = findNextCell();
 
-            nextCell = findNextCell();
+            if(nextCell != null){
+                if(nextCell.isCross()) crossRoutine();
+                setNextCell(findNextCell());
+            }
             Thread.sleep(sleepTime);
 
         } catch (InterruptedException e) {
@@ -68,10 +78,33 @@ public class Car extends Thread{
         }
     }
 
+    private void crossRoutine() {
+        direction = choseDirection();
+
+        //Ideia:
+        //caso a direção escolhida é up e ele esta em up, a sequencia seria:
+        goToCell(cellAtUp());
+        goToCell(cellAtUp());
+
+        //caso a direção escolhida é right  e ele esta em up
+        goToCell(cellAtUp());
+
+        //caso a direção escolhida  é left e ele esta em up
+        goToCell(cellAtUp());
+        goToCell(cellAtUp());
+        goToCell(cellAtLeft());
+
+    }
+
+    private void goToCell(Cell cell){
+        Cell aux = this.cell;
+        setCell(cell);
+        if(aux != null) {aux.removeCar();}
+    }
+
     private Cell findNextCell(){
         try {
             int direction = this.direction.to();
-            if(direction > 4) return getCrossCellPossibilities();
             return switch (direction) {
                 case UP -> cellAtUp();
                 case RIGHT -> cellAtRight();
@@ -84,35 +117,45 @@ public class Car extends Thread{
         }
     }
 
-    private Cell getCrossCellPossibilities() {
-        return null;
+    private Direction choseDirection() {
+        Random random = new Random();
+        int directionToGo = crossPossibilities.get(this.direction.to())[random.nextInt(4)];
+
+        return new Direction(directionToGo);
     }
 
-    private Cell cellAtUp() throws ArrayIndexOutOfBoundsException{
-        int x = cell.getRow();
-        int y = cell.getCol();
-        return road.getCellByPosition(x - 1, y);
+    private Cell cellAtUp(){
+        return road.getCellAtUpFrom(cell);
     }
 
-    private Cell cellAtRight() throws ArrayIndexOutOfBoundsException{
-        int x = cell.getRow();
-        int y = cell.getCol();
-        return road.getCellByPosition(x, y + 1);
+    private Cell cellAtRight(){
+        return road.getCellAtRightFrom(cell);
     }
 
-    private Cell cellAtDown() throws ArrayIndexOutOfBoundsException{
-        int x = cell.getRow();
-        int y = cell.getCol();
-        return road.getCellByPosition(x + 1, y);
+    private Cell cellAtDown(){
+        return road.getCellAtDownFrom(cell);
     }
 
-    private Cell cellAtLeft() throws ArrayIndexOutOfBoundsException{
-        int x = cell.getRow();
-        int y = cell.getCol();
-        return road.getCellByPosition(x, y - 1);
+    private Cell cellAtLeft(){
+        return road.getCellAtLeftFrom(cell);
     }
 
     public Icon getCarIcon() {
         return carIcon;
     }
+
+    public void imInUpAndGoingToLeft(Car car){
+        car.goToCell(cellAtUp());
+        goToCell(cellAtUp());
+        goToCell(cellAtLeft());
+    }
+
+    private void loadPossibilities(){
+        crossPossibilities.put(UP, new int[]{RIGHT, UP, LEFT});
+        crossPossibilities.put(RIGHT, new int[]{UP, RIGHT, DOWN});
+        crossPossibilities.put(DOWN, new int[]{LEFT, DOWN, RIGHT});
+        crossPossibilities.put(LEFT, new int[]{DOWN, LEFT, UP});
+    }
+
+
 }

@@ -60,4 +60,46 @@ public class Road {
     public Cell[][] getMatrix(){
         return matrix;
     }
+
+    public Cell getCellAtUpFrom(Cell cell){
+        try{
+
+            int x = cell.getRow();
+            int y = cell.getCol();
+            return getCellByPosition(x - 1, y);
+
+        } catch (ArrayIndexOutOfBoundsException ex){
+            return null;
+        }
+    }
+
+    public Cell getCellAtDownFrom(Cell cell){
+        try{
+            int x = cell.getRow();
+            int y = cell.getCol();
+            return getCellByPosition(x + 1, y);
+        } catch (ArrayIndexOutOfBoundsException ex){
+            return null;
+        }
+    }
+
+    public Cell getCellAtRightFrom(Cell cell){
+        try{
+            int x = cell.getRow();
+            int y = cell.getCol();
+            return getCellByPosition(x, y + 1);
+        } catch (ArrayIndexOutOfBoundsException ex){
+            return null;
+        }
+    }
+
+    public Cell getCellAtLeftFrom(Cell cell){
+        try{
+            int x = cell.getRow();
+            int y = cell.getCol();
+            return getCellByPosition(x, y - 1);
+        } catch (ArrayIndexOutOfBoundsException ex){
+            return null;
+        }
+    }
 }

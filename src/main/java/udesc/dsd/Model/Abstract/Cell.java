@@ -29,6 +29,8 @@ public abstract class Cell {
         return col;
     }
 
+    public boolean isCross() {return isCross;}
+
     public void setCar(Car car) throws InterruptedException {
         block(); //entao espere
         this.car = car;//eu ocupei
