@@ -26,7 +26,7 @@ public class MonitorsCell extends Cell {
     }
 
     @Override
-    public boolean tryBlock() throws InterruptedException {
+    public synchronized boolean tryBlock() throws InterruptedException {
         Random r = new Random();
         return lock.tryLock(r.nextInt(500), TimeUnit.MILLISECONDS);
     }

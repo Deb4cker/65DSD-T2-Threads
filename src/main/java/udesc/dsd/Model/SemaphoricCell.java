@@ -25,7 +25,7 @@ public class SemaphoricCell extends Cell {
     }
 
     @Override
-    public boolean tryBlock() throws InterruptedException {
+    public synchronized boolean tryBlock() throws InterruptedException {
         Random r = new Random();
         return semaphore.tryAcquire(r.nextInt(500), TimeUnit.MILLISECONDS);
     }

@@ -62,7 +62,7 @@ public class Car extends Thread{
                 Thread.sleep(sleepTime);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("Deu pau na " + getName());
         }
     }
 
@@ -77,12 +77,16 @@ public class Car extends Thread{
         routine.doRoutine();
     }
 
-    private void goToCell(Cell cell) throws InterruptedException{
-        Cell aux = this.cell;
-        setCell(cell);
-        cell.setCar(this);
-        if(aux != null) aux.removeCar();
-        Thread.sleep(sleepTime);
+    private void goToCell(Cell cell){
+        try {
+            Cell aux = this.cell;
+            setCell(cell);
+            cell.setCar(this);
+            if (aux != null) aux.removeCar();
+            Thread.sleep(sleepTime);
+        }catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
     }
 
     private Cell findNextCell(){
@@ -123,14 +127,14 @@ public class Car extends Thread{
     public void fromUpToRight(){
         Cell a = cellAtUp();
         Cell b = road.getCellAtRightFrom(a);
-        philosopherDinner(a, b);
+        philosopherDinner(Arrays.asList(a, b));
     }
 
     private void fromUpToUp(){
         Cell a = cellAtUp();
         Cell b = road.getCellAtUpFrom(a);
         Cell c = road.getCellAtUpFrom(b);
-        philosopherDinner(a, b, c);
+        philosopherDinner(Arrays.asList(a, b, c));
     }
 
     private void fromUpToLeft(){
@@ -138,20 +142,20 @@ public class Car extends Thread{
         Cell b = road.getCellAtUpFrom(a);
         Cell c = road.getCellAtLeftFrom(b);
         Cell d = road.getCellAtLeftFrom(c);
-        philosopherDinner(a, b, c, d);
+        philosopherDinner(Arrays.asList(a, b, c, d));
     }
 
     private void fromRightToDown(){
         Cell a = cellAtRight();
         Cell b = road.getCellAtDownFrom(a);
-        philosopherDinner(a, b);
+        philosopherDinner(Arrays.asList(a, b));
     }
 
     private void fromRightToRight(){
         Cell a = cellAtRight();
         Cell b = road.getCellAtRightFrom(a);
         Cell c = road.getCellAtRightFrom(b);
-        philosopherDinner(a, b, c);
+        philosopherDinner(Arrays.asList(a, b, c));
     }
 
     private void fromRightToUp(){
@@ -159,20 +163,20 @@ public class Car extends Thread{
         Cell b = road.getCellAtRightFrom(a);
         Cell c = road.getCellAtUpFrom(b);
         Cell d = road.getCellAtUpFrom(c);
-        philosopherDinner(a, b, c, d);
+        philosopherDinner(Arrays.asList(a, b, c, d));
     }
 
     private void fromLeftToUp(){
         Cell a = cellAtLeft();
         Cell b = road.getCellAtUpFrom(a);
-        philosopherDinner(a, b);
+        philosopherDinner(Arrays.asList(a, b));
     }
 
     private void fromLeftToLeft(){
         Cell a = cellAtLeft();
         Cell b = road.getCellAtLeftFrom(a);
         Cell c = road.getCellAtLeftFrom(b);
-        philosopherDinner(a, b, c);
+        philosopherDinner(Arrays.asList(a, b, c));
     }
 
     private void fromLeftToDown(){
@@ -180,20 +184,20 @@ public class Car extends Thread{
         Cell b = road.getCellAtLeftFrom(a);
         Cell c = road.getCellAtDownFrom(b);
         Cell d = road.getCellAtDownFrom(c);
-        philosopherDinner(a, b, c, d);
+        philosopherDinner(Arrays.asList(a, b, c, d));
     }
 
     private void fromDownToLeft(){
         Cell a = cellAtDown();
         Cell b = road.getCellAtLeftFrom(a);
-        philosopherDinner(a, b);
+        philosopherDinner(Arrays.asList(a, b));
     }
 
     private void fromDownToDown(){
         Cell a = cellAtDown();
         Cell b = road.getCellAtDownFrom(a);
         Cell c = road.getCellAtDownFrom(b);
-        philosopherDinner(a, b, c);
+        philosopherDinner(Arrays.asList(a, b, c));
     }
 
     private void fromDownToRight(){
@@ -201,92 +205,36 @@ public class Car extends Thread{
         Cell b = road.getCellAtDownFrom(a);
         Cell c = road.getCellAtRightFrom(b);
         Cell d = road.getCellAtRightFrom(c);
-        philosopherDinner(a, b, c, d);
+        philosopherDinner(Arrays.asList(a, b, c, d));
     }
 
-    private void philosopherDinner(Cell a, Cell b){
+    private void philosopherDinner(List<Cell> cellsToGoThrough){
         Random r = new Random();
-
         boolean gone = false;
+
+        int cellsToLockCount = cellsToGoThrough.size();
+        List<Cell> blockedCells = new ArrayList<>();
         try {
             do {
-                boolean blockedA = a.tryBlock();
-                boolean blockedB = b.tryBlock();
-                if (blockedA && blockedB) {
-                    goToCell(a);
-                    goToCell(b);
+                for (Cell cell : cellsToGoThrough)
+                    if (cell.tryBlock()) blockedCells.add(cell);
+
+                boolean lockedAllCells = cellsToLockCount == blockedCells.size();
+
+                if (lockedAllCells) {
+                    blockedCells.forEach(this::goToCell);
                     gone = true;
-                    this.direction = b.getDirection();
                 } else {
-                    if (blockedA) a.release();
-                    if (blockedB) b.release();
+                    blockedCells.forEach(Cell::release);
                     sleep(r.nextLong(500));
                 }
-            } while (!gone);
-        }catch (InterruptedException e){
-            System.out.println("Deu pau na " + getName());
-        }
-    }
 
-    private void philosopherDinner(Cell a, Cell b, Cell c){
-        Random r = new Random();
-        boolean gone = false;
-        try{
-            do {
-                boolean blockedA = a.tryBlock();
-                boolean blockedB = b.tryBlock();
-                boolean blockedC = c.tryBlock();
+                blockedCells.forEach(Cell::release);
 
-                if(blockedA && blockedB && blockedC){
-                    goToCell(a);
-                    goToCell(b);
-                    goToCell(c);
-                    gone = true;
-                    this.direction = c.getDirection();
-                } else {
-                    if (blockedA) a.release();
-                    if (blockedB) b.release();
-                    if (blockedC) c.release();
-                    sleep(r.nextLong(500));
-                }
             } while (!gone);
         } catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
-    }
-
-    private void philosopherDinner(Cell a, Cell b, Cell c, Cell d){
-        Random r = new Random();
-        boolean gone = false;
-        try {
-            do {
-                boolean blockedA = a.tryBlock();
-                boolean blockedB = b.tryBlock();
-                boolean blockedC = c.tryBlock();
-                boolean blockedD = d.tryBlock();
-
-                if (blockedA && blockedB && blockedC && blockedD) {
-                    goToCell(a);
-                    goToCell(b);
-                    goToCell(c);
-                    goToCell(d);
-                    gone = true;
-                    this.direction = d.getDirection();
-                } else {
-                    if (blockedA) a.release();
-                    if (blockedB) b.release();
-                    if (blockedC) c.release();
-                    if (blockedD) d.release();
-                    sleep(r.nextLong(500));
-                }
-            } while (!gone);
-        } catch (InterruptedException e){
-            System.out.println("Deu pau na " + getName());
-        }
-    }
-
-    private void philosophersDinner(List<Cell> cellsToGoThrough){
-
     }
 
     private void loadPossibilities(){
