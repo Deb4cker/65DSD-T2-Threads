@@ -223,6 +223,8 @@ public class Car extends Thread{
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
+            a.release();
+            b.release();
         }catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
@@ -250,6 +252,9 @@ public class Car extends Thread{
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
+            a.release();
+            b.release();
+            c.release();
         } catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
@@ -280,6 +285,10 @@ public class Car extends Thread{
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
+            a.release();
+            b.release();
+            c.release();
+            d.release();
         } catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
