@@ -80,6 +80,7 @@ public class Car extends Thread{
     private void crossRoutine() {
         Random random = new Random();
         int option = random.nextInt(3);
+        option=2;
         CrossAction routine = crossPossibilities.get(direction.to())[option];
         routine.doRoutine();
     }
@@ -216,16 +217,16 @@ public class Car extends Thread{
         boolean gone = false;
         try {
             do {
-                a.block();
+                boolean blockedA = a.tryBlock();
                 boolean blockedB = b.tryBlock();
-                if (blockedB) {
+                if (blockedA && blockedB) {
                     goToCell(a);
                     goToCell(b);
                     gone = true;
                     this.direction = b.getDirection();
                 } else {
-                    a.release();
-                    b.release();
+                    if (blockedA) a.release();
+                    if (blockedB) b.release();
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
@@ -239,20 +240,20 @@ public class Car extends Thread{
         boolean gone = false;
         try{
             do {
-                a.block();
+                boolean blockedA = a.tryBlock();
                 boolean blockedB = b.tryBlock();
                 boolean blockedC = c.tryBlock();
 
-                if(blockedB && blockedC){
+                if(blockedA && blockedB && blockedC){
                     goToCell(a);
                     goToCell(b);
                     goToCell(c);
                     gone = true;
                     this.direction = c.getDirection();
                 } else {
-                    a.release();
-                    b.release();
-                    c.release();
+                    if (blockedA) a.release();
+                    if (blockedB) b.release();
+                    if (blockedC) c.release();
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
@@ -266,12 +267,12 @@ public class Car extends Thread{
         boolean gone = false;
         try {
             do {
-                a.block();
-                boolean blockedB = c.tryBlock();
-                boolean blockedC = d.tryBlock();
+                boolean blockedA = a.tryBlock();
+                boolean blockedB = b.tryBlock();
+                boolean blockedC = c.tryBlock();
                 boolean blockedD = d.tryBlock();
 
-                if (blockedB && blockedC && blockedD) {
+                if (blockedA && blockedB && blockedC && blockedD) {
                     goToCell(a);
                     goToCell(b);
                     goToCell(c);
@@ -279,10 +280,10 @@ public class Car extends Thread{
                     gone = true;
                     this.direction = d.getDirection();
                 } else {
-                    a.release();
-                    b.release();
-                    c.release();
-                    d.release();
+                    if (blockedA) a.release();
+                    if (blockedB) b.release();
+                    if (blockedC) c.release();
+                    if (blockedD) d.release();
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
