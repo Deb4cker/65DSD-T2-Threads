@@ -27,15 +27,8 @@ public class Car extends Thread{
     }
 
     public void setCell(Cell cell){
-        try {
-            this.cell = cell;
-            if (!cell.isCross()){
-                this.direction = cell.getDirection();
-                cell.setCar(this);
-            }
-        } catch (InterruptedException e){
-            System.out.println("Ferrou :(");
-        }
+        this.cell = cell;
+        if (!cell.isCross()) this.direction = cell.getDirection();
     }
 
     public void removeFromCell(){
@@ -80,7 +73,6 @@ public class Car extends Thread{
     private void crossRoutine() {
         Random random = new Random();
         int option = random.nextInt(3);
-        option=2;
         CrossAction routine = crossPossibilities.get(direction.to())[option];
         routine.doRoutine();
     }
@@ -88,6 +80,7 @@ public class Car extends Thread{
     private void goToCell(Cell cell) throws InterruptedException{
         Cell aux = this.cell;
         setCell(cell);
+        cell.setCar(this);
         if(aux != null) aux.removeCar();
         Thread.sleep(sleepTime);
     }
@@ -290,6 +283,10 @@ public class Car extends Thread{
         } catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
+    }
+
+    private void philosophersDinner(List<Cell> cellsToGoThrough){
+
     }
 
     private void loadPossibilities(){

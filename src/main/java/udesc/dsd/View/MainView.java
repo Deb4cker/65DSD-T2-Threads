@@ -17,7 +17,7 @@ public class MainView extends JFrame implements IconUpdater {
         road.mapIconUpdater(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
-        setSize(1600, 900);
+        setSize(900, 900);
         getContentPane().setBackground(Color.DARK_GRAY);
         this.road = road;
         loadMatrix();
