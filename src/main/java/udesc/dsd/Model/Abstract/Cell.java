@@ -51,6 +51,8 @@ public abstract class Cell {
 
     public abstract void block() throws InterruptedException;
 
+    public abstract boolean tryBlock() throws InterruptedException;
+
     public Direction getDirection() {
         return direction;
     }
@@ -61,5 +63,10 @@ public abstract class Cell {
 
     public synchronized boolean isFree(){
         return car == null;
+    }
+
+    @Override
+    public String toString(){
+        return direction + " [line: "+getRow() + ", " + "column: "+ getCol() +"]";
     }
 }

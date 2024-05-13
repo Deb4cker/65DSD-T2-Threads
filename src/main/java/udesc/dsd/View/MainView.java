@@ -5,6 +5,7 @@ import udesc.dsd.Model.Observer.IconUpdater;
 import udesc.dsd.Model.Road;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class MainView extends JFrame implements IconUpdater {
@@ -48,6 +49,8 @@ public class MainView extends JFrame implements IconUpdater {
 
     private JLabel mountVisualCell(Icon icon, PointInScreen point){
         JLabel image = new JLabel();
+        Border two = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black);
+        image.setBorder(two);
         image.setIcon(icon);
         image.setBounds(point.x, point.y, 30, 30);
         return image;

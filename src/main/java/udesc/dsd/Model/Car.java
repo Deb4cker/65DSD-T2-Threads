@@ -1,12 +1,11 @@
 package udesc.dsd.Model;
 
 import udesc.dsd.Model.Abstract.Cell;
+import udesc.dsd.Model.Interface.CrossAction;
 
 import javax.swing.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static udesc.dsd.Commons.Constants.*;
 
@@ -17,7 +16,7 @@ public class Car extends Thread{
     private Cell nextCell;
     private Cell cell;
     private final Icon carIcon;
-    private final Map<Integer, int[]> crossPossibilities = new HashMap<>();
+    private final Map<Integer, CrossAction[]> crossPossibilities = new HashMap<>();
     private boolean isRunning;
 
     public Car(Road road, long sleepTime, Icon carIcon) {
@@ -65,9 +64,10 @@ public class Car extends Thread{
             if(nextCell != null){
                 if(nextCell.isCross()) crossRoutine();
                 setNextCell(findNextCell());
-            } else shutdown();
-            Thread.sleep(sleepTime);
-
+            } else {
+                shutdown();
+                Thread.sleep(sleepTime);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -78,26 +78,17 @@ public class Car extends Thread{
     }
 
     private void crossRoutine() {
-
-        //TODO
-        //Ideia:
-        //caso a direção escolhida é up e ele esta em up, a sequencia seria:
-        goToCell(cellAtUp());
-        goToCell(cellAtUp());
-
-        //caso a direção escolhida é right  e ele esta em up
-        goToCell(cellAtUp());
-
-        //caso a direção escolhida  é left e ele esta em up
-        goToCell(cellAtUp());
-        goToCell(cellAtUp());
-        goToCell(cellAtLeft());
+        Random random = new Random();
+        int option = random.nextInt(3);
+        CrossAction routine = crossPossibilities.get(direction.to())[option];
+        routine.doRoutine();
     }
 
-    private void goToCell(Cell cell){
+    private void goToCell(Cell cell) throws InterruptedException{
         Cell aux = this.cell;
         setCell(cell);
         if(aux != null) aux.removeCar();
+        Thread.sleep(sleepTime);
     }
 
     private Cell findNextCell(){
@@ -113,13 +104,6 @@ public class Car extends Thread{
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
-    }
-
-    private Direction choseDirection() {
-        Random random = new Random();
-        int directionToGo = crossPossibilities.get(this.direction.to())[random.nextInt(4)];
-
-        return new Direction(directionToGo);
     }
 
     private Cell cellAtUp(){
@@ -142,18 +126,194 @@ public class Car extends Thread{
         return carIcon;
     }
 
-    public void imInUpAndGoingToLeft(Car car){
-        car.goToCell(cellAtUp());
-        goToCell(cellAtUp());
-        goToCell(cellAtLeft());
+    public void fromUpToRight(){
+        Cell a = cellAtUp();
+        Cell b = road.getCellAtRightFrom(a);
+        philosopherDinner(a, b);
+    }
+
+    private void fromUpToUp(){
+        Cell a = cellAtUp();
+        Cell b = road.getCellAtUpFrom(a);
+        Cell c = road.getCellAtUpFrom(b);
+        philosopherDinner(a, b, c);
+    }
+
+    private void fromUpToLeft(){
+        Cell a = cellAtUp();
+        Cell b = road.getCellAtUpFrom(a);
+        Cell c = road.getCellAtLeftFrom(b);
+        Cell d = road.getCellAtLeftFrom(c);
+        philosopherDinner(a, b, c, d);
+    }
+
+    private void fromRightToDown(){
+        Cell a = cellAtRight();
+        Cell b = road.getCellAtDownFrom(a);
+        philosopherDinner(a, b);
+    }
+
+    private void fromRightToRight(){
+        Cell a = cellAtRight();
+        Cell b = road.getCellAtRightFrom(a);
+        Cell c = road.getCellAtRightFrom(b);
+        philosopherDinner(a, b, c);
+    }
+
+    private void fromRightToUp(){
+        Cell a = cellAtRight();
+        Cell b = road.getCellAtRightFrom(a);
+        Cell c = road.getCellAtUpFrom(b);
+        Cell d = road.getCellAtUpFrom(c);
+        philosopherDinner(a, b, c, d);
+    }
+
+    private void fromLeftToUp(){
+        Cell a = cellAtLeft();
+        Cell b = road.getCellAtUpFrom(a);
+        philosopherDinner(a, b);
+    }
+
+    private void fromLeftToLeft(){
+        Cell a = cellAtLeft();
+        Cell b = road.getCellAtLeftFrom(a);
+        Cell c = road.getCellAtLeftFrom(b);
+        philosopherDinner(a, b, c);
+    }
+
+    private void fromLeftToDown(){
+        Cell a = cellAtLeft();
+        Cell b = road.getCellAtLeftFrom(a);
+        Cell c = road.getCellAtDownFrom(b);
+        Cell d = road.getCellAtDownFrom(c);
+        philosopherDinner(a, b, c, d);
+    }
+
+    private void fromDownToLeft(){
+        Cell a = cellAtDown();
+        Cell b = road.getCellAtLeftFrom(a);
+        philosopherDinner(a, b);
+    }
+
+    private void fromDownToDown(){
+        Cell a = cellAtDown();
+        Cell b = road.getCellAtDownFrom(a);
+        Cell c = road.getCellAtDownFrom(b);
+        philosopherDinner(a, b, c);
+    }
+
+    private void fromDownToRight(){
+        Cell a = cellAtDown();
+        Cell b = road.getCellAtDownFrom(a);
+        Cell c = road.getCellAtRightFrom(b);
+        Cell d = road.getCellAtRightFrom(c);
+        philosopherDinner(a, b, c, d);
+    }
+
+    private void philosopherDinner(Cell a, Cell b){
+        Random r = new Random();
+
+        boolean gone = false;
+        try {
+            do {
+                a.block();
+                boolean blockedB = b.tryBlock();
+                if (blockedB) {
+                    goToCell(a);
+                    goToCell(b);
+                    gone = true;
+                    this.direction = b.getDirection();
+                } else {
+                    a.release();
+                    b.release();
+                    sleep(r.nextLong(500));
+                }
+            } while (!gone);
+        }catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
+    }
+
+    private void philosopherDinner(Cell a, Cell b, Cell c){
+        Random r = new Random();
+        boolean gone = false;
+        try{
+            do {
+                a.block();
+                boolean blockedB = b.tryBlock();
+                boolean blockedC = c.tryBlock();
+
+                if(blockedB && blockedC){
+                    goToCell(a);
+                    goToCell(b);
+                    goToCell(c);
+                    gone = true;
+                    this.direction = c.getDirection();
+                } else {
+                    a.release();
+                    b.release();
+                    c.release();
+                    sleep(r.nextLong(500));
+                }
+            } while (!gone);
+        } catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
+    }
+
+    private void philosopherDinner(Cell a, Cell b, Cell c, Cell d){
+        Random r = new Random();
+        boolean gone = false;
+        try {
+            do {
+                a.block();
+                boolean blockedB = c.tryBlock();
+                boolean blockedC = d.tryBlock();
+                boolean blockedD = d.tryBlock();
+
+                if (blockedB && blockedC && blockedD) {
+                    goToCell(a);
+                    goToCell(b);
+                    goToCell(c);
+                    goToCell(d);
+                    gone = true;
+                    this.direction = d.getDirection();
+                } else {
+                    a.release();
+                    b.release();
+                    c.release();
+                    d.release();
+                    sleep(r.nextLong(500));
+                }
+            } while (!gone);
+        } catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
     }
 
     private void loadPossibilities(){
-        crossPossibilities.put(UP, new int[]{RIGHT, UP, LEFT});
-        crossPossibilities.put(RIGHT, new int[]{UP, RIGHT, DOWN});
-        crossPossibilities.put(DOWN, new int[]{LEFT, DOWN, RIGHT});
-        crossPossibilities.put(LEFT, new int[]{DOWN, LEFT, UP});
+        crossPossibilities.put(UP, new CrossAction[]{
+                this::fromUpToRight,
+                this::fromUpToUp,
+                this::fromUpToLeft
+        });
+
+        crossPossibilities.put(RIGHT, new CrossAction[]{
+                this::fromRightToDown,
+                this::fromRightToRight,
+                this::fromRightToUp
+        });
+
+        crossPossibilities.put(DOWN, new CrossAction[]{
+                this::fromDownToLeft,
+                this::fromDownToDown,
+                this::fromDownToRight
+        });
+
+        crossPossibilities.put(LEFT, new CrossAction[]{
+                this::fromLeftToUp,
+                this::fromLeftToLeft,
+                this::fromLeftToDown
+        });
     }
-
-
 }

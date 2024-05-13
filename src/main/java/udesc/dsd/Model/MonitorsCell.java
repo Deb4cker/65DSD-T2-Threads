@@ -2,6 +2,8 @@ package udesc.dsd.Model;
 
 import udesc.dsd.Model.Abstract.Cell;
 
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,5 +23,11 @@ public class MonitorsCell extends Cell {
     @Override
     public void block() throws InterruptedException {
         lock.lock();
+    }
+
+    @Override
+    public boolean tryBlock() throws InterruptedException {
+        Random r = new Random();
+        return lock.tryLock(r.nextInt(500), TimeUnit.MILLISECONDS);
     }
 }

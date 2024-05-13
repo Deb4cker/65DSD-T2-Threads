@@ -2,7 +2,9 @@ package udesc.dsd.Model;
 
 import udesc.dsd.Model.Abstract.Cell;
 
+import java.util.Random;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class SemaphoricCell extends Cell {
 
@@ -22,5 +24,9 @@ public class SemaphoricCell extends Cell {
         semaphore.acquire();
     }
 
-
+    @Override
+    public boolean tryBlock() throws InterruptedException {
+        Random r = new Random();
+        return semaphore.tryAcquire(r.nextInt(500), TimeUnit.MILLISECONDS);
+    }
 }

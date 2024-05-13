@@ -4,6 +4,8 @@ import udesc.dsd.utils.DirectionDictionary;
 
 import javax.swing.*;
 
+import static udesc.dsd.Commons.Constants.*;
+
 public class Direction {
     private final int to;
     private final Icon image;
@@ -19,5 +21,16 @@ public class Direction {
 
     public Icon getImage(){
         return image;
+    }
+
+    @Override
+    public String toString(){
+        return switch (to){
+            case UP -> "Up";
+            case DOWN -> "Down";
+            case RIGHT -> "Right";
+            case LEFT -> "Left";
+            default -> "cross";
+        };
     }
 }
