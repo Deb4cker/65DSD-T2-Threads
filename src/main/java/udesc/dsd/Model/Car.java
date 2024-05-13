@@ -217,14 +217,15 @@ public class Car extends Thread{
                     goToCell(b);
                     gone = true;
                     this.direction = b.getDirection();
+                    a.release();
+                    b.release();
                 } else {
                     if (blockedA) a.release();
                     if (blockedB) b.release();
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
-            a.release();
-            b.release();
+
         }catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
@@ -245,6 +246,9 @@ public class Car extends Thread{
                     goToCell(c);
                     gone = true;
                     this.direction = c.getDirection();
+                    a.release();
+                    b.release();
+                    c.release();
                 } else {
                     if (blockedA) a.release();
                     if (blockedB) b.release();
@@ -252,9 +256,7 @@ public class Car extends Thread{
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
-            a.release();
-            b.release();
-            c.release();
+
         } catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
@@ -277,6 +279,10 @@ public class Car extends Thread{
                     goToCell(d);
                     gone = true;
                     this.direction = d.getDirection();
+                    a.release();
+                    b.release();
+                    c.release();
+                    d.release();
                 } else {
                     if (blockedA) a.release();
                     if (blockedB) b.release();
@@ -285,10 +291,7 @@ public class Car extends Thread{
                     sleep(r.nextLong(500));
                 }
             } while (!gone);
-            a.release();
-            b.release();
-            c.release();
-            d.release();
+
         } catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
