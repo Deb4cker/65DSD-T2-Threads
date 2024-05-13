@@ -208,6 +208,99 @@ public class Car extends Thread{
         philosopherDinner(Arrays.asList(a, b, c, d));
     }
 
+    private void philosopherDinner(Cell a, Cell b){
+        Random r = new Random();
+
+        boolean gone = false;
+        try {
+            do {
+                boolean blockedA = a.tryBlock();
+                boolean blockedB = b.tryBlock();
+                if (blockedA && blockedB) {
+                    goToCell(a);
+                    goToCell(b);
+                    gone = true;
+                    this.direction = b.getDirection();
+                    a.release();
+                    b.release();
+                } else {
+                    if (blockedA) a.release();
+                    if (blockedB) b.release();
+                    sleep(r.nextLong(500));
+                }
+            } while (!gone);
+
+        }catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
+    }
+
+    private void philosopherDinner(Cell a, Cell b, Cell c){
+        Random r = new Random();
+        boolean gone = false;
+        try{
+            do {
+                boolean blockedA = a.tryBlock();
+                boolean blockedB = b.tryBlock();
+                boolean blockedC = c.tryBlock();
+
+                if(blockedA && blockedB && blockedC){
+                    goToCell(a);
+                    goToCell(b);
+                    goToCell(c);
+                    gone = true;
+                    this.direction = c.getDirection();
+                    a.release();
+                    b.release();
+                    c.release();
+                } else {
+                    if (blockedA) a.release();
+                    if (blockedB) b.release();
+                    if (blockedC) c.release();
+                    sleep(r.nextLong(500));
+                }
+            } while (!gone);
+
+        } catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
+    }
+
+    private void philosopherDinner(Cell a, Cell b, Cell c, Cell d){
+        Random r = new Random();
+        boolean gone = false;
+        try {
+            do {
+                boolean blockedA = a.tryBlock();
+                boolean blockedB = b.tryBlock();
+                boolean blockedC = c.tryBlock();
+                boolean blockedD = d.tryBlock();
+
+                if (blockedA && blockedB && blockedC && blockedD) {
+                    goToCell(a);
+                    goToCell(b);
+                    goToCell(c);
+                    goToCell(d);
+                    gone = true;
+                    this.direction = d.getDirection();
+                    a.release();
+                    b.release();
+                    c.release();
+                    d.release();
+                } else {
+                    if (blockedA) a.release();
+                    if (blockedB) b.release();
+                    if (blockedC) c.release();
+                    if (blockedD) d.release();
+                    sleep(r.nextLong(500));
+                }
+            } while (!gone);
+
+        } catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
+    }
+
     private void philosopherDinner(List<Cell> cellsToGoThrough){
         Random r = new Random();
         boolean gone = false;
@@ -224,15 +317,13 @@ public class Car extends Thread{
                 if (lockedAllCells) {
                     blockedCells.forEach(this::goToCell);
                     gone = true;
+                    blockedCells.forEach(Cell::release);
                 } else {
                     blockedCells.forEach(Cell::release);
                     sleep(r.nextLong(500));
                 }
-
-                blockedCells.forEach(Cell::release);
-
             } while (!gone);
-        } catch (InterruptedException e){
+        }catch (InterruptedException e){
             System.out.println("Deu pau na " + getName());
         }
     }
