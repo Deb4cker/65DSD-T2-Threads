@@ -15,10 +15,6 @@ public class Constants {
     public static final int FROM_RIGHT_TO_DOWN = 11;
     public static final int FROM_DOWN_TO_LEFT = 12;
 
-    public static final int FIRST_OPTION = 0;
-    public static final int SECOND_OPTION = 1;
-    public static final int THIRD_OPTION = 2;
-
     public static final String PNG = ".png";
     public static final String JPG = ".jpg";
 

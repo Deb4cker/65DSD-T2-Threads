@@ -5,13 +5,13 @@ import udesc.dsd.Model.Direction;
 import udesc.dsd.Model.Observer.IconUpdater;
 
 public abstract class Cell {
-    private final int row;
-    private final int col;
+    protected final int row;
+    protected final int col;
     private final Direction direction;
     private final boolean isEntrance;
     private final boolean isCross;
     protected Car car;
-    private IconUpdater ui;
+    protected IconUpdater ui;
 
     public Cell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
         this.row = row;

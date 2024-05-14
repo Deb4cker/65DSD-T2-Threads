@@ -29,4 +29,11 @@ public class SemaphoricCell extends Cell {
         Random r = new Random();
         return semaphore.tryAcquire(r.nextInt(500), TimeUnit.MILLISECONDS);
     }
+
+    @Override
+    public void setCar(Car car) throws InterruptedException {
+        if(!car.isInCross()) block(); //espere
+        this.car = car;//eu ocupei
+        ui.update(car.getCarIcon(), row, col);
+    }
 }
