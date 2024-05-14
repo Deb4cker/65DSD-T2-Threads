@@ -3,15 +3,17 @@ package udesc.dsd.Model.Abstract;
 import udesc.dsd.Model.Car;
 import udesc.dsd.Model.Direction;
 import udesc.dsd.Model.Observer.IconUpdater;
+import udesc.dsd.Model.Road;
 
 public abstract class Cell {
-    protected final int row;
-    protected final int col;
+    private final int row;
+    private final int col;
     private final Direction direction;
     private final boolean isEntrance;
     private final boolean isCross;
     protected Car car;
-    protected IconUpdater ui;
+    private IconUpdater ui;
+    private Road road;
 
     public Cell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
         this.row = row;
@@ -37,6 +39,10 @@ public abstract class Cell {
         ui.update(car.getCarIcon(), row, col);
     }
 
+    public void setRoad(Road road){
+        this.road = road;
+    }
+
     public void removeCar() {
         this.car = null; //desocupei
         ui.update(direction.getImage(), row, col);
@@ -45,6 +51,41 @@ public abstract class Cell {
 
     public void setUi(IconUpdater ui){
         this.ui = ui;
+    }
+
+    private Cell cellAtUp(){
+        return road.getCellAtUpFrom(this);
+    }
+
+    private Cell cellAtRight(){
+        return road.getCellAtRightFrom(this);
+    }
+
+    private Cell cellAtDown(){
+        return road.getCellAtDownFrom(this);
+    }
+
+    private Cell cellAtLeft(){
+        return road.getCellAtLeftFrom(this);
+    }
+
+    public boolean cellAtUpIsCross(){
+        Cell cell = cellAtUp();
+        return cell != null && cell.isCross();
+    }
+
+    public boolean cellAtDownIsCross(){
+        Cell cell = cellAtDown();
+        return cell != null && cell.isCross();
+    }
+
+    public boolean cellAtLeftIsCross(){
+        Cell cell = cellAtLeft();
+        return cell != null && cell.isCross();    }
+
+    public boolean cellAtRightIsCross(){
+        Cell cell = cellAtRight();
+        return cell != null && cell.isCross();
     }
 
     public abstract void release();

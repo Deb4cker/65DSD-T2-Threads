@@ -21,19 +21,13 @@ public class SemaphoricCell extends Cell {
 
     @Override
     public void block() throws InterruptedException {
-        semaphore.acquire();
+        boolean isNextACross = cellAtDownIsCross() || cellAtLeftIsCross() || cellAtRightIsCross() || cellAtUpIsCross();
+        if(!isCross() && !isNextACross) semaphore.acquire();
     }
 
     @Override
     public synchronized boolean tryBlock() throws InterruptedException {
         Random r = new Random();
         return semaphore.tryAcquire(r.nextInt(500), TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public void setCar(Car car) throws InterruptedException {
-        if(!car.isInCross()) block(); //espere
-        this.car = car;//eu ocupei
-        ui.update(car.getCarIcon(), row, col);
     }
 }

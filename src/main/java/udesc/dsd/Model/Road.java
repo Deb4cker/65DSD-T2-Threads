@@ -21,6 +21,7 @@ public class Road {
         for (Cell[] cells : matrix) {
             for(Cell cell : cells){
                 if (cell.isEntrance()) entrances.add(cell);
+                cell.setRoad(this);
             }
         }
     }

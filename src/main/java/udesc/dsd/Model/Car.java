@@ -18,7 +18,6 @@ public class Car extends Thread{
     private final Icon carIcon;
     private final Map<Integer, CrossAction[]> crossPossibilities = new HashMap<>();
     private boolean isRunning;
-    private boolean inCross;
 
     public Car(Road road, long sleepTime, Icon carIcon) {
         this.road = road;
@@ -30,10 +29,6 @@ public class Car extends Thread{
     public void setCell(Cell cell){
         this.cell = cell;
         if (!cell.isCross()) this.direction = cell.getDirection();
-    }
-
-    public boolean isInCross() {
-        return inCross;
     }
 
     public void removeFromCell(){
@@ -76,12 +71,10 @@ public class Car extends Thread{
     }
 
     private void crossRoutine() {
-        inCross = true;
         Random random = new Random();
         int option = random.nextInt(3);
         CrossAction routine = crossPossibilities.get(direction.to())[option];
         routine.doRoutine();
-        inCross = false;
     }
 
     private void goToCell(Cell cell){
@@ -329,6 +322,7 @@ public class Car extends Thread{
                     gone = true;
                     this.direction = blockedCells.getFirst().getDirection();
                     blockedCells.forEach(Cell::release);
+
                 } else {
                     blockedCells.forEach(Cell::release);
                     sleep(r.nextLong(500));
