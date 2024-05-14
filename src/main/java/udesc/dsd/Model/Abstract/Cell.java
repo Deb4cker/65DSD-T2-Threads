@@ -6,8 +6,6 @@ import udesc.dsd.Model.Observer.IconUpdater;
 
 import java.util.concurrent.Semaphore;
 
-import static udesc.dsd.Commons.Constants.EMPTY;
-
 public abstract class Cell {
     private final int row;
     private final int col;
@@ -35,10 +33,9 @@ public abstract class Cell {
 
     public boolean isCross() {return isCross;}
 
-    public boolean isRoad(){
-        return direction.to() == EMPTY;
+    public boolean isCrossEnd(){
+        return direction.to() > 4 && direction.to() < 9;
     }
-
 
     public void setCarAndBlock(Car car) throws InterruptedException {
         block(); //entao espere

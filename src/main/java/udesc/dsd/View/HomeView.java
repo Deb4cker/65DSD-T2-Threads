@@ -104,9 +104,10 @@ public class HomeView extends JFrame {
             Car car = carFactory.buildCar();
             routine.addToQueue(car);
         }
-        new MainView(road);
+        new SimulationView(road);
 
         routine.start();
+        dispose();
     }
 
     private String switchRoadFile(){

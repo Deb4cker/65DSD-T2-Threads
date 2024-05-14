@@ -9,7 +9,7 @@ import java.util.List;
 public class EntranceMediatorRoutine extends Thread{
 
     private final Road road;
-    private boolean running = false;
+    private static boolean running = false;
     private final List<Car> queue = Collections.synchronizedList(new ArrayList<>()); //fila
 
     public EntranceMediatorRoutine(Road road) {
@@ -18,10 +18,6 @@ public class EntranceMediatorRoutine extends Thread{
 
     public void addToQueue(Car car) {
         queue.add(car);
-    }
-
-    public void removeFromQueue(Car car) {
-        queue.remove(car);
     }
 
     @Override
@@ -44,7 +40,7 @@ public class EntranceMediatorRoutine extends Thread{
         }
     }
 
-    public void shutDown(){
+    public static void shutDown(){
         running = false;
     }
 }

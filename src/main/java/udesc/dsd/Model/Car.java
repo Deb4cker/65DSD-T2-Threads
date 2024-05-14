@@ -73,13 +73,9 @@ public class Car extends Thread{
     private void crossRoutine() {
         Random random = new Random();
         int direction = this.direction.to();
-        int option = (direction >= 5 && direction <= 8)? random.nextInt(1,3) : random.nextInt(3);
+        int option = random.nextInt(3);
         CrossAction routine = crossPossibilities.get(direction)[option];
         routine.doRoutine();
-    }
-
-    private boolean isViableWay(List<Cell> way){
-        return !way.getLast().isRoad();
     }
 
     private void goToCell(Cell cell){
@@ -144,7 +140,9 @@ public class Car extends Thread{
     public void fromUpToRight(){
         Cell a = cellAtUp();
         Cell b = road.getCellAtRightFrom(a);
-        philosopherDinner(a, b);
+
+        if(a.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b);
     }
 
     private void fromUpToUp(){
@@ -152,8 +150,8 @@ public class Car extends Thread{
         Cell b = road.getCellAtUpFrom(a);
         Cell c = road.getCellAtUpFrom(b);
 
-        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
-        else crossRoutine();
+        if(b.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b, c);
     }
 
     private void fromUpToLeft(){
@@ -161,24 +159,26 @@ public class Car extends Thread{
         Cell b = road.getCellAtUpFrom(a);
         Cell c = road.getCellAtLeftFrom(b);
         Cell d = road.getCellAtLeftFrom(c);
-        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
-        else crossRoutine();
+
+        if(c.isCrossEnd()) crossRoutine();
+        else  philosopherDinner(a, b, c, d);
     }
 
     private void fromRightToDown(){
         Cell a = cellAtRight();
         Cell b = road.getCellAtDownFrom(a);
-        philosopherDinner(a, b);
-        if(isViableWay(Arrays.asList(a, b))) philosopherDinner(a, b);
-        else crossRoutine();
+
+        if(a.isCrossEnd())crossRoutine();
+        else philosopherDinner(a, b);
     }
 
     private void fromRightToRight(){
         Cell a = cellAtRight();
         Cell b = road.getCellAtRightFrom(a);
         Cell c = road.getCellAtRightFrom(b);
-        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
-        else crossRoutine();
+
+        if(b.isCrossEnd())crossRoutine();
+        else philosopherDinner(a, b, c);
     }
 
     private void fromRightToUp(){
@@ -186,23 +186,25 @@ public class Car extends Thread{
         Cell b = road.getCellAtRightFrom(a);
         Cell c = road.getCellAtUpFrom(b);
         Cell d = road.getCellAtUpFrom(c);
-        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
-        else crossRoutine();
+
+        if(c.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b, c, d);
     }
 
     private void fromLeftToUp(){
         Cell a = cellAtLeft();
         Cell b = road.getCellAtUpFrom(a);
-        if(isViableWay(Arrays.asList(a, b))) philosopherDinner(a, b);
-        else crossRoutine();
+        if(a.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b);
     }
 
     private void fromLeftToLeft(){
         Cell a = cellAtLeft();
         Cell b = road.getCellAtLeftFrom(a);
         Cell c = road.getCellAtLeftFrom(b);
-        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
-        else crossRoutine();
+
+        if(b.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b, c);
     }
 
     private void fromLeftToDown(){
@@ -210,23 +212,26 @@ public class Car extends Thread{
         Cell b = road.getCellAtLeftFrom(a);
         Cell c = road.getCellAtDownFrom(b);
         Cell d = road.getCellAtDownFrom(c);
-        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
-        else crossRoutine();
+
+        if(c.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b, c, d);
     }
 
     private void fromDownToLeft(){
         Cell a = cellAtDown();
         Cell b = road.getCellAtLeftFrom(a);
-        if(isViableWay(Arrays.asList(a, b))) philosopherDinner(a, b);
-        else crossRoutine();
+
+        if(a.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b);
     }
 
     private void fromDownToDown(){
         Cell a = cellAtDown();
         Cell b = road.getCellAtDownFrom(a);
         Cell c = road.getCellAtDownFrom(b);
-        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
-        else crossRoutine();
+;
+        if(b.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b, c);
     }
 
     private void fromDownToRight(){
@@ -234,8 +239,9 @@ public class Car extends Thread{
         Cell b = road.getCellAtDownFrom(a);
         Cell c = road.getCellAtRightFrom(b);
         Cell d = road.getCellAtRightFrom(c);
-        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
-        else crossRoutine();
+
+        if(c.isCrossEnd()) crossRoutine();
+        else philosopherDinner(a, b, c, d);
     }
 
     private void philosopherDinner(Cell a, Cell b){

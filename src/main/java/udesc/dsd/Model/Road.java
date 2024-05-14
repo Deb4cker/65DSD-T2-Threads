@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static udesc.dsd.Commons.Constants.*;
-
 public class Road {
 
     private final Cell[][] matrix;
@@ -99,15 +97,5 @@ public class Road {
         } catch (ArrayIndexOutOfBoundsException ex){
             return null;
         }
-    }
-
-    public Cell getCellAtFrom(int direction, Cell cell){
-       return switch (direction){
-           case UP -> getCellAtUpFrom(cell);
-           case DOWN -> getCellAtDownFrom(cell);
-           case RIGHT -> getCellAtRightFrom(cell);
-           case LEFT -> getCellAtLeftFrom(cell);
-           default -> null;
-       };
     }
 }

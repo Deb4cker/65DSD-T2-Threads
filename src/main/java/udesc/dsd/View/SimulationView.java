@@ -1,6 +1,7 @@
 package udesc.dsd.View;
 
 import udesc.dsd.Model.Abstract.Cell;
+import udesc.dsd.Model.EntranceMediatorRoutine;
 import udesc.dsd.Model.Observer.IconUpdater;
 import udesc.dsd.Model.Road;
 
@@ -8,12 +9,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-public class MainView extends JFrame implements IconUpdater {
+public class SimulationView extends JFrame implements IconUpdater {
 
     private final Road road;
     private JLabel[][] viewMatrix;
+    private JButton shutDownButton;
 
-    public MainView(Road road){
+    public SimulationView(Road road){
         road.mapIconUpdater(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
@@ -21,6 +23,7 @@ public class MainView extends JFrame implements IconUpdater {
         getContentPane().setBackground(Color.DARK_GRAY);
         this.road = road;
         loadMatrix();
+        renderShutDownButton();
         setVisible(true);
     }
 
@@ -60,6 +63,13 @@ public class MainView extends JFrame implements IconUpdater {
     public synchronized void update(Icon icon, int row, int col) {
         JLabel label = viewMatrix[row][col];
         label.setIcon(icon);
+    }
+
+    public void renderShutDownButton(){
+        shutDownButton = new JButton("ShutDown");
+        shutDownButton.setBounds(800, 800, 50, 25);
+        shutDownButton.addActionListener(action -> EntranceMediatorRoutine.shutDown());
+        add(shutDownButton);
     }
 
     private record PointInScreen(int x, int y){}
