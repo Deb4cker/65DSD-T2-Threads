@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static udesc.dsd.Commons.Constants.EMPTY;
+
 public class MonitorsCell extends Cell {
 
     private final Lock lock = new ReentrantLock();
@@ -26,7 +28,7 @@ public class MonitorsCell extends Cell {
     }
 
     @Override
-    public synchronized boolean tryBlock() throws InterruptedException {
+    public boolean tryBlock() throws InterruptedException {
         Random r = new Random();
         return lock.tryLock(r.nextInt(500), TimeUnit.MILLISECONDS);
     }

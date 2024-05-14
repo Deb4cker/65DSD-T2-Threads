@@ -10,10 +10,10 @@ public class DirectionDictionary {
     public static Icon getImage(int dir){
         return switch (dir) {
             case EMPTY -> new ImageIcon(GRASS_ICON);
-            case UP, TO_UP -> new ImageIcon(UP_ROAD_ICON);
-            case RIGHT, TO_RIGHT -> new ImageIcon(RIGHT_ROAD_ICON);
-            case DOWN, TO_DOWN -> new ImageIcon(DOWN_ROAD_ICON);
-            case LEFT, TO_LEFT -> new ImageIcon(LEFT_ROAD_ICON);
+            case UP -> new ImageIcon(UP_ROAD_ICON);
+            case RIGHT -> new ImageIcon(RIGHT_ROAD_ICON);
+            case DOWN -> new ImageIcon(DOWN_ROAD_ICON);
+            case LEFT -> new ImageIcon(LEFT_ROAD_ICON);
             default -> new ImageIcon(CROSS_ROAD_ICON);
         };
     }

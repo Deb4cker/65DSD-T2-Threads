@@ -32,7 +32,7 @@ public class Car extends Thread{
     }
 
     public void removeFromCell(){
-        cell.removeCar();
+        cell.removeCarAndRelease();
         this.cell = null;
     }
 
@@ -72,12 +72,29 @@ public class Car extends Thread{
 
     private void crossRoutine() {
         Random random = new Random();
-        int option = random.nextInt(3);
-        CrossAction routine = crossPossibilities.get(direction.to())[option];
+        int direction = this.direction.to();
+        int option = (direction >= 5 && direction <= 8)? random.nextInt(1,3) : random.nextInt(3);
+        CrossAction routine = crossPossibilities.get(direction)[option];
         routine.doRoutine();
     }
 
+    private boolean isViableWay(List<Cell> way){
+        return !way.getLast().isRoad();
+    }
+
     private void goToCell(Cell cell){
+        try {
+            Cell aux = this.cell;
+            setCell(cell);
+            cell.setCarAndBlock(this);
+            if (aux != null) aux.removeCarAndRelease();
+            Thread.sleep(sleepTime);
+        }catch (InterruptedException e){
+            System.out.println("Deu pau na " + getName());
+        }
+    }
+
+    private void goToCellInCross(Cell cell){
         try {
             Cell aux = this.cell;
             setCell(cell);
@@ -134,7 +151,9 @@ public class Car extends Thread{
         Cell a = cellAtUp();
         Cell b = road.getCellAtUpFrom(a);
         Cell c = road.getCellAtUpFrom(b);
-        philosopherDinner(a, b, c);
+
+        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
+        else crossRoutine();
     }
 
     private void fromUpToLeft(){
@@ -142,20 +161,24 @@ public class Car extends Thread{
         Cell b = road.getCellAtUpFrom(a);
         Cell c = road.getCellAtLeftFrom(b);
         Cell d = road.getCellAtLeftFrom(c);
-        philosopherDinner(a, b, c, d);
+        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
+        else crossRoutine();
     }
 
     private void fromRightToDown(){
         Cell a = cellAtRight();
         Cell b = road.getCellAtDownFrom(a);
         philosopherDinner(a, b);
+        if(isViableWay(Arrays.asList(a, b))) philosopherDinner(a, b);
+        else crossRoutine();
     }
 
     private void fromRightToRight(){
         Cell a = cellAtRight();
         Cell b = road.getCellAtRightFrom(a);
         Cell c = road.getCellAtRightFrom(b);
-        philosopherDinner(a, b, c);
+        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
+        else crossRoutine();
     }
 
     private void fromRightToUp(){
@@ -163,20 +186,23 @@ public class Car extends Thread{
         Cell b = road.getCellAtRightFrom(a);
         Cell c = road.getCellAtUpFrom(b);
         Cell d = road.getCellAtUpFrom(c);
-        philosopherDinner(a, b, c, d);
+        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
+        else crossRoutine();
     }
 
     private void fromLeftToUp(){
         Cell a = cellAtLeft();
         Cell b = road.getCellAtUpFrom(a);
-        philosopherDinner(a, b);
+        if(isViableWay(Arrays.asList(a, b))) philosopherDinner(a, b);
+        else crossRoutine();
     }
 
     private void fromLeftToLeft(){
         Cell a = cellAtLeft();
         Cell b = road.getCellAtLeftFrom(a);
         Cell c = road.getCellAtLeftFrom(b);
-        philosopherDinner(a, b, c);
+        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
+        else crossRoutine();
     }
 
     private void fromLeftToDown(){
@@ -184,20 +210,23 @@ public class Car extends Thread{
         Cell b = road.getCellAtLeftFrom(a);
         Cell c = road.getCellAtDownFrom(b);
         Cell d = road.getCellAtDownFrom(c);
-        philosopherDinner(a, b, c, d);
+        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
+        else crossRoutine();
     }
 
     private void fromDownToLeft(){
         Cell a = cellAtDown();
         Cell b = road.getCellAtLeftFrom(a);
-        philosopherDinner(a, b);
+        if(isViableWay(Arrays.asList(a, b))) philosopherDinner(a, b);
+        else crossRoutine();
     }
 
     private void fromDownToDown(){
         Cell a = cellAtDown();
         Cell b = road.getCellAtDownFrom(a);
         Cell c = road.getCellAtDownFrom(b);
-        philosopherDinner(a, b, c);
+        if(isViableWay(Arrays.asList(a, b, c))) philosopherDinner(a, b, c);
+        else crossRoutine();
     }
 
     private void fromDownToRight(){
@@ -205,7 +234,8 @@ public class Car extends Thread{
         Cell b = road.getCellAtDownFrom(a);
         Cell c = road.getCellAtRightFrom(b);
         Cell d = road.getCellAtRightFrom(c);
-        philosopherDinner(a, b, c, d);
+        if(isViableWay(Arrays.asList(a, b, c, d))) philosopherDinner(a, b, c, d);
+        else crossRoutine();
     }
 
     private void philosopherDinner(Cell a, Cell b){
@@ -217,8 +247,14 @@ public class Car extends Thread{
                 boolean blockedA = a.tryBlock();
                 boolean blockedB = b.tryBlock();
                 if (blockedA && blockedB) {
-                    goToCell(a);
-                    goToCell(b);
+                    if (this.cell instanceof SemaphoricCell) {
+                        this.cell.release();
+                        goToCellInCross(a);
+                        goToCellInCross(b);
+                    }else {
+                        goToCell(a);
+                        goToCell(b);
+                    }
                     gone = true;
                     this.direction = b.getDirection();
                     a.release();
@@ -245,9 +281,16 @@ public class Car extends Thread{
                 boolean blockedC = c.tryBlock();
 
                 if(blockedA && blockedB && blockedC){
-                    goToCell(a);
-                    goToCell(b);
-                    goToCell(c);
+                    if (this.cell instanceof SemaphoricCell){
+                        this.cell.release();
+                        goToCellInCross(a);
+                        goToCellInCross(b);
+                        goToCellInCross(c);
+                    }else {
+                        goToCell(a);
+                        goToCell(b);
+                        goToCell(c);
+                    }
                     gone = true;
                     this.direction = c.getDirection();
                     a.release();
@@ -277,10 +320,19 @@ public class Car extends Thread{
                 boolean blockedD = d.tryBlock();
 
                 if (blockedA && blockedB && blockedC && blockedD) {
-                    goToCell(a);
-                    goToCell(b);
-                    goToCell(c);
-                    goToCell(d);
+                    if (this.cell instanceof SemaphoricCell){
+                        this.cell.release();
+                        goToCellInCross(a);
+                        goToCellInCross(b);
+                        goToCellInCross(c);
+                        goToCellInCross(d);
+
+                    }else {
+                        goToCell(a);
+                        goToCell(b);
+                        goToCell(c);
+                        goToCell(d);
+                    }
                     gone = true;
                     this.direction = d.getDirection();
                     a.release();
@@ -303,7 +355,7 @@ public class Car extends Thread{
 
     private void philosopherDinner(List<Cell> cellsToGoThrough){
         //TODO
-        //Encontrar problemas de IllegalReleaseException
+        //Encontrar problemas de IllegalMonitorStateException
 
         Random r = new Random();
         boolean gone = false;
@@ -318,7 +370,7 @@ public class Car extends Thread{
                 boolean lockedAllCells = cellsToLockCount == blockedCells.size();
 
                 if (lockedAllCells) {
-                    blockedCells.forEach(this::goToCell);
+                    blockedCells.forEach(this::goToCellInCross);
                     gone = true;
                     this.direction = blockedCells.getFirst().getDirection();
                     blockedCells.forEach(Cell::release);
@@ -357,5 +409,8 @@ public class Car extends Thread{
                 this::fromLeftToLeft,
                 this::fromLeftToDown
         });
+
+        //entre 5 e 8 so as duas ultimas
+        //se é de 2 vias(opções) so as duas primeiras opções;
     }
 }

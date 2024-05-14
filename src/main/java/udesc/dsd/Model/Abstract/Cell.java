@@ -3,7 +3,10 @@ package udesc.dsd.Model.Abstract;
 import udesc.dsd.Model.Car;
 import udesc.dsd.Model.Direction;
 import udesc.dsd.Model.Observer.IconUpdater;
-import udesc.dsd.Model.Road;
+
+import java.util.concurrent.Semaphore;
+
+import static udesc.dsd.Commons.Constants.EMPTY;
 
 public abstract class Cell {
     private final int row;
@@ -13,7 +16,6 @@ public abstract class Cell {
     private final boolean isCross;
     protected Car car;
     private IconUpdater ui;
-    private Road road;
 
     public Cell(int row, int col, Direction direction, boolean isEntrance, boolean isCross) {
         this.row = row;
@@ -33,59 +35,33 @@ public abstract class Cell {
 
     public boolean isCross() {return isCross;}
 
-    public void setCar(Car car) throws InterruptedException {
+    public boolean isRoad(){
+        return direction.to() == EMPTY;
+    }
+
+
+    public void setCarAndBlock(Car car) throws InterruptedException {
         block(); //entao espere
-        this.car = car;//eu ocupei
+        setCar(car);
+    }
+
+    public void setCar(Car car){
+        this.car = car;
         ui.update(car.getCarIcon(), row, col);
     }
 
-    public void setRoad(Road road){
-        this.road = road;
+    public void removeCarAndRelease() {
+        removeCar();
+        release(); //pode vir
     }
 
-    public void removeCar() {
+    public void removeCar(){
         this.car = null; //desocupei
         ui.update(direction.getImage(), row, col);
-        release(); //pode vir
     }
 
     public void setUi(IconUpdater ui){
         this.ui = ui;
-    }
-
-    private Cell cellAtUp(){
-        return road.getCellAtUpFrom(this);
-    }
-
-    private Cell cellAtRight(){
-        return road.getCellAtRightFrom(this);
-    }
-
-    private Cell cellAtDown(){
-        return road.getCellAtDownFrom(this);
-    }
-
-    private Cell cellAtLeft(){
-        return road.getCellAtLeftFrom(this);
-    }
-
-    public boolean cellAtUpIsCross(){
-        Cell cell = cellAtUp();
-        return cell != null && cell.isCross();
-    }
-
-    public boolean cellAtDownIsCross(){
-        Cell cell = cellAtDown();
-        return cell != null && cell.isCross();
-    }
-
-    public boolean cellAtLeftIsCross(){
-        Cell cell = cellAtLeft();
-        return cell != null && cell.isCross();    }
-
-    public boolean cellAtRightIsCross(){
-        Cell cell = cellAtRight();
-        return cell != null && cell.isCross();
     }
 
     public abstract void release();
@@ -109,5 +85,9 @@ public abstract class Cell {
     @Override
     public String toString(){
         return direction + " [line: "+getRow() + ", " + "column: "+ getCol() +"]";
+    }
+
+    public Semaphore getSemaphore(){
+        return null;
     }
 }
